@@ -2,9 +2,18 @@ import { App } from 'app'
 import SQLDatabase from 'database/sql'
 import v1Checker from 'checker/forbidden-words'
 import LogModifiy from 'plugin/log'
+import config from 'plugin/config'
 import rename from 'plugin/rename'
 const app = new App()
 ;(async () => {
+  await app.use(config, {
+    version: 1,
+    check: {
+      version: {
+        $gte: 0
+      }
+    }
+  })
   await app.use(SQLDatabase, {
     // @ts-expect-error idk why I got error
     sequelize: process.env.SQL_URI

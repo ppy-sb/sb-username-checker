@@ -1,6 +1,6 @@
 import { Plugin, Config, Checker } from 'types/useable'
 import { Database, User } from 'types/database'
-import { SearchParams } from './Config'
+import { SearchParams } from '../plugin/config'
 
 class Base {
   _version = 0

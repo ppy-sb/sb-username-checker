@@ -1,4 +1,4 @@
-import { SearchParams } from 'app/Config'
+import { SearchParams } from 'plugin/config'
 export interface User {
   _id: any,
   id: number,

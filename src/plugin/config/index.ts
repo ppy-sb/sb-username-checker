@@ -12,6 +12,7 @@ export interface AppOptions {
   check?: SearchParams
 }
 const a:Plugin = function Config (app, options: AppOptions) {
+  if (options.version) app._version = options.version
   if (!options.check) {
     options.check = {
       version: {
@@ -19,5 +20,6 @@ const a:Plugin = function Config (app, options: AppOptions) {
       }
     }
   }
+  app._searchParams = options.check
 }
 export default a

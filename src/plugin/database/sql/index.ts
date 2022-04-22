@@ -1,7 +1,7 @@
 import { USBC } from 'app'
 import { User, Database } from 'types/database'
 import { Sequelize, Model, CreationOptional, DataTypes, Options, Op, WhereOptions } from 'sequelize'
-import { SearchParams } from 'app/Config'
+import { SearchParams } from 'plugin/config'
 
 export interface PluginOptions {
   sequelize: Options,
