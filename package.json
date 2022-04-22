@@ -1,0 +1,31 @@
+{
+  "name": "sb-username-cheker",
+  "version": "0.0.1",
+  "description": "police!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cli-test": "ts-node-dev --require dotenv/config --respawn -r tsconfig-paths/register  src/cli/run-db.ts"
+  },
+  "workspaces": [
+    "src/plugin/checker/*",
+    "src/plugin/*",
+    "src/plugin/database/*"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.25",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "eslint": "^8.13.0",
+    "eslint-config-standard": "^17.0.0",
+    "ts-node": "^10.7.0",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
