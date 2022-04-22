@@ -6,8 +6,10 @@ export default function LogModifiy (ctx: USBC) {
       id: user.id,
       name: user.name,
       name_safe: user.name_safe,
-      'reject reason': user._rejectReason,
-      positives: user._checkResult
+      'reject reason': user._rejectReason.join('\n'),
+      'test positives': Object.entries(user._checkResult).map(([type, positives]) => {
+        return `${type}: ${positives.join(', ')}`
+      }).join('\n')
     }))
     console.table(table)
   })

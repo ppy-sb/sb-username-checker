@@ -7,6 +7,10 @@ export interface PluginOptions {
   sequelize: Options,
   table: string
 }
+class SQLUserInfo extends Model {
+  declare name: string
+  declare safe_name: string
+}
 // order of InferAttributes & InferCreationAttributes is important.
 class SQLUser extends Model<Omit<User, 'reject' | 'approve' | 'inappropriate_check_date'>> implements User {
   declare _id: CreationOptional<number>
@@ -82,7 +86,20 @@ class SQLDatabase implements Database {
   }
 
   reject (users: SQLUser[]) {
-    return Promise.all(users.map(user => user.save()))
+    return Promise.all(users.map(user => {
+      if (user.is_active) {
+        console.warn('writing back to users table:', { id: user.id, name: user.name, name_safe: user.name_safe })
+        SQLUserInfo.update({
+          name: user.name,
+          safe_name: user.name_safe
+        }, {
+          where: {
+            id: user.id
+          }
+        })
+      }
+      return user.save()
+    }))
   }
 
   #getVirtualUser (_id: unknown): Partial<User> {
@@ -163,6 +180,16 @@ class SQLDatabase implements Database {
       tableName: 'name_legality',
       createdAt: false,
       updatedAt: 'inappropriate_check_date'
+    })
+    SQLUserInfo.init({
+      name: { type: DataTypes.STRING },
+      safe_name: { type: DataTypes.STRING }
+    }, {
+      sequelize: this._db,
+      modelName: 'UserInfo',
+      createdAt: false,
+      updatedAt: false,
+      tableName: 'users'
     })
     await this._db.authenticate()
       .then(() => console.log('Connection has been established successfully.'))
