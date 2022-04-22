@@ -2,7 +2,7 @@
 import { Database, User } from 'types/database'
 import { USBC } from 'app'
 class TestDatabase implements Database {
-  async fetchUsers () {
+  async fetchAllUserNameHistories () {
     const users = await (await import('./fakeusers')).default()
     return users as unknown as User[]
   }

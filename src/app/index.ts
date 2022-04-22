@@ -46,7 +46,7 @@ export class App extends USBC {
 
   async #runCheckers () {
     if (!this._database) return
-    const users = await this._database.fetchUsers(this._searchParams)
+    const users = await this._database.fetchAllUserNameHistories(this._searchParams)
     await Promise.all(users.map(async user => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       user.approve = () => {}

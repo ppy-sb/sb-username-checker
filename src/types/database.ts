@@ -1,6 +1,13 @@
 import { SearchParams } from 'plugin/config'
+export interface UserInfo {
+  id: number,
+  name: string,
+  name_safe: string,
+  email: string,
+  banned: boolean
+}
 export interface User {
-  _id: any,
+  _id: number,
   id: number,
   name: string,
   name_safe: string,
@@ -15,23 +22,25 @@ export interface User {
     name?: string[]
     nameSafe?: string[]
   }
-  approve: () => void,
-  reject: (reason: string) => void
+  approve(): void,
+  reject(reason: string): void
+  getUserInfo(): Promise<UserInfo | null>
 }
 export interface Database {
-  fetchUsers(find: SearchParams): Promise<User[]>
+  fetchAllUserNameHistories(find: SearchParams): Promise<User[]>
   start(): void
   stop(): void
   approve(users: User[]): void
   reject(users: User[]): void
+  fetchUserStats({ id }: {id:number}): Promise<UserInfo | null>
 }
 // export interface SingleShotDatabase {
-//   fetchUsers(afterDate: Date): Promise<User[]>
+//   fetchAllUserNameHistories(afterDate: Date): Promise<User[]>
 //   approve(users: User[]): void
 //   reject(users: User[]): void
 // }
 // export interface StreamDatabase {
-//   fetchUsers(afterDate: Date): Promise<User[]>
+//   fetchAllUserNameHistories(afterDate: Date): Promise<User[]>
 //   approve(users: User[]): void
 //   reject(users: User[]): void
 // }

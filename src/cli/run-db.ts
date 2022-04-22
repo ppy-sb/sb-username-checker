@@ -10,7 +10,7 @@ const app = new App()
     version: 2,
     check: {
       version: {
-        $lt: 2
+        $lte: 2
       }
     }
   })
