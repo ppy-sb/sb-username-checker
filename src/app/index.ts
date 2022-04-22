@@ -47,19 +47,21 @@ export class App extends USBC {
   async #runCheckers () {
     if (!this._database) return
     const users = await this._database.fetchUsers(this._searchParams)
-    users.forEach(user => {
+    await Promise.all(users.map(async user => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       user.approve = () => {}
       user.reject = (reason: string) => {
         user._rejected = true
         user._rejectReason.push(reason)
       }
-      const rejected = this._checker.every(checker => {
-        checker(user)
+      const res = await Promise.all(this._checker.map(async checker => {
+        await checker(user)
         return user._rejected
-      })
+      }))
+      const rejected = res.every(r => r)
+
       if (rejected) { this._rejected.push(user) } else { this._approved.push(user) }
-    })
+    }))
   }
 
   async #removeinappropriateChars () {

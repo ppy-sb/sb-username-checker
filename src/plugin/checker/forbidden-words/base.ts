@@ -4,7 +4,7 @@ export interface Options {
   splitter: string
 }
 
-export default async function TestCheckerPlugin (ctx: USBC, options: Options) {
+export default function TestCheckerPlugin (ctx: USBC, options: Options) {
   const { forbidden } = options
   ctx.useChecker(function testChecker (user) {
     const violated: Partial<Record<string, string>> = {

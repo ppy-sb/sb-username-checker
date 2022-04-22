@@ -12,7 +12,7 @@ export default async function localChecker (ctx: USBC, options: Partial<PluginOp
   if (!options.forbidden) options.forbidden = []
   if (options.fetch) {
     if (options.fetch.url) options.fetch.url = encodeURI(options.fetch.url)
-    const words = await getWords(options.fetch).then(words => words.split(options.splitter || '\n'))
+    const words = await getWords(options.fetch).then(words => words.split(options.splitter || '\n')).then(words => words.filter(a => a))
     options.forbidden.push(...words)
   }
   return base(ctx, options as PluginOptions)

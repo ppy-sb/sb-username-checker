@@ -7,10 +7,10 @@ import rename from 'plugin/rename'
 const app = new App()
 ;(async () => {
   await app.use(config, {
-    version: 1,
+    version: 2,
     check: {
       version: {
-        $lt: 1
+        $lt1: 2
       }
     }
   })
@@ -19,7 +19,7 @@ const app = new App()
     sequelize: process.env.SQL_URI
   })
   await app.use(rename, {
-    replaceWith: '~~'
+    replaceWith: '~'
   })
   await app.use(LogModifiy)
   await app.use(v1Checker, {
