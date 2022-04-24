@@ -13,7 +13,7 @@ import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
   _before: unknown
   _rejected = false
-  #rejectReason: string[] = []
+  _rejectReason: string[] = []
   _checkResult: {
     name: string[],
     nameSafe: string[]
@@ -32,6 +32,7 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
   reject (reason: string) {
     this._rejected = true
     this._rejectReason.push(reason)
+    this.reject_reason = this._rejectReason.join('\n')
   }
 
   getStat () {
@@ -45,6 +46,7 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
       name,
       name_safe,
       is_active,
+      reject_reason,
       inappropriate_check_date,
       inappropriate_checker_version,
       create_time
@@ -55,6 +57,7 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
       name,
       name_safe,
       is_active,
+      reject_reason,
       inappropriate_check_date,
       inappropriate_checker_version,
       create_time
@@ -109,15 +112,15 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
     this._original.reject_reason = value
   }
 
-  get _rejectReason () {
-    this.reject_reason = this.#rejectReason.join('\n')
-    return this.#rejectReason
-  }
+  // get _rejectReason () {
+  //   this.reject_reason = this.#rejectReason.join('\n')
+  //   return this.#rejectReason
+  // }
 
-  set _rejectReason (value) {
-    this.#rejectReason = value
-    this.reject_reason = value.join('\n')
-  }
+  // set _rejectReason (value) {
+  //   this.#rejectReason = value
+  //   this.reject_reason = value.join('\n')
+  // }
 
   get inappropriate_check_date () {
     return this._original.inappropriate_check_date
