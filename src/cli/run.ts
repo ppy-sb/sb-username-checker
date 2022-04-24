@@ -1,10 +1,10 @@
 import { App } from 'app'
-import TestDatabase from 'database/test'
+import TestSource from 'source/test'
 import v1Checker from 'checker/forbidden-words'
 import rename from 'plugin/rename'
 
 const app = new App()
-app.use(TestDatabase)
+app.use(TestSource)
 app.use(rename, {
   replaceWith: '~~'
 })

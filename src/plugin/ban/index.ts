@@ -1,9 +1,11 @@
 import { USBC } from 'app'
-import { User } from 'types/database'
+// import Confirm from 'prompt-confirm'
 
 export default function BanRejectedUserPlugin (app: USBC) {
-  app.useModifier(async function BanRejectedUser (user: User) {
-    const userInfo = await user.getUserInfo()
+  app.useModifier(async function BanRejectedUser (user) {
+    if (!user._rejected) return
+    if (!user.isDatabase) return
+    const userInfo = await user.getStat()
     if (!userInfo) { throw new Error('user not found') }
     userInfo.banned = true
   })

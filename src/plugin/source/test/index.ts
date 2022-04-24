@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Database, User } from 'types/database'
+import { Source, UserHoldingNames } from 'types/source'
 import { USBC } from 'app'
-class TestDatabase implements Database {
-  async fetchAllUserNameHistories () {
+class TestSource implements Source {
+  async fetchAllUserHoldingNames () {
     const users = await (await import('./fakeusers')).default()
-    return users as unknown as User[]
+    return users as unknown as UserHoldingNames[]
   }
 
-  approve (users: User[]) {
+  approve (users: UserHoldingNames[]) {
     users.forEach(user => console.info('approved', user.name))
   }
 
-  reject (users: User[]) {
+  reject (users: UserHoldingNames[]) {
     users.forEach(user =>
       console.info('rejected', user.name, 'reason:', user._rejectReason.join(', '))
     )
@@ -20,6 +20,6 @@ class TestDatabase implements Database {
   start () {}
   stop () {}
 }
-export default function TestDatabasePlugin (ctx: USBC) {
-  ctx.useDatabase(new TestDatabase())
+export default function TestSourcePlugin (ctx: USBC) {
+  ctx.useSource(new TestSource())
 }

@@ -10,7 +10,8 @@
   "workspaces": [
     "src/plugin/checker/*",
     "src/plugin/*",
-    "src/plugin/database/*"
+    "src/plugin/source/*",
+    "src/plugin/routine/*"
   ],
   "author": "",
   "license": "MIT",

@@ -1,6 +1,7 @@
-import { Plugin, Config, Checker } from 'types/useable'
-import { Database, User } from 'types/database'
+import { Callback, AppCallback, Config, Plugin } from 'types/useable'
+import { Database } from 'types/source'
 import { SearchParams } from '../plugin/config'
+// import EventEmitter from 'events'
 
 class Base {
   _version = 0
@@ -10,68 +11,77 @@ class Base {
     }
   }
 
-  _rejected: User[] = []
-  _approved: User[] = []
-  _checker: Checker[] = []
-  _modifier: Checker[] = []
-  _database?: Database = undefined
+  _checker: Callback[] = []
+  _modifier: Callback[] = []
+  _app: AppCallback[] = []
+  // source?: Source = undefined
+  database?: Database = undefined
+  _installed: Map<string |symbol, Callback | AppCallback> = new Map()
 }
 
 export class USBC extends Base {
-  async use<T extends Plugin> (plugin: T, options?: Config<T>) {
-    await plugin(this, options)
+  _current: string | symbol = ''
+  // _emitter: EventEmitter = new EventEmitter()
+  // emit (eventName: string | symbol, ...rest: any[]) {
+  //   return this._emitter.emit(eventName, ...rest)
+  // }
+
+  // on (eventName: string | symbol, listener: (...args: any[]) => void) {
+  //   return this._emitter.on(eventName, listener)
+  // }
+
+  // once (eventName: string | symbol, listener: (...args: any[]) => void) {
+  //   return this._emitter.once(eventName, listener)
+  // }
+
+  // off (eventName: string | symbol, listener: (...args: any[]) => void) {
+  //   return this._emitter.off(eventName, listener)
+  // }
+
+  register (name: string | symbol) {
+    this._current = name
   }
 
-  useChecker (checker: Checker) {
+  async use<T extends Plugin> (plugin: T, options?: Config<T>): Promise<ReturnType<T>> {
+    this._current = plugin.name || Symbol('plugin:' + plugin.name)
+    const rtn = await plugin(this, options)
+    return rtn
+  }
+
+  // async with(plugin: string | string[], plugin) {
+
+  // }
+
+  useChecker (checker: Callback) {
     this._checker.push(checker)
   }
 
+  // useSource (source: Source) {
+  //   this.source = source
+  // }
+
   useDatabase (database: Database) {
-    this._database = database
+    this.database = database
   }
 
-  useModifier (modifier: Checker) {
+  useModifier (modifier: Callback) {
     this._modifier.push(modifier)
+  }
+
+  useApplication (application: AppCallback) {
+    this._app.push(application)
   }
 }
 
 export class App extends USBC {
+  async start () {
+    // if (this.source) await this.source.start()
+    if (this.database) await this.database.start()
+  }
+
   async run () {
-    await this._database?.start()
-    await this.#runCheckers()
-    await this.#removeinappropriateChars()
-    await this.#commitToDatabase()
-    await this._database?.stop()
-  }
-
-  async #runCheckers () {
-    if (!this._database) return
-    const users = await this._database.fetchAllUserNameHistories(this._searchParams)
-    await Promise.all(users.map(async user => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      user.approve = () => {}
-      user.reject = (reason: string) => {
-        user._rejected = true
-        user._rejectReason.push(reason)
-      }
-      const res = await Promise.all(this._checker.map(async checker => {
-        await checker(user)
-        return user._rejected
-      }))
-      const rejected = res.every(r => r)
-
-      if (rejected) { this._rejected.push(user) } else { this._approved.push(user) }
-    }))
-  }
-
-  async #removeinappropriateChars () {
-    return await Promise.all(this._rejected.map(
-      user => this._modifier.map(mod => mod(user))
-    ))
-  }
-
-  async #commitToDatabase () {
-    await this._database?.approve(this._approved)
-    await this._database?.reject(this._rejected)
+    for (const app of this._app) {
+      await app(this)
+    }
   }
 }

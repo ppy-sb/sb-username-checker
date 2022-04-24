@@ -26,10 +26,10 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
       return true
     })
     if (nameViolation) {
-      user.reject('name contains forbidden word: ' + violated.name)
+      user.reject('name includes: ' + violated.name)
     }
     if (nameSafeViolation) {
-      user.reject('name_safe contains forbidden word: ' + violated.nameSafe)
+      user.reject('name_safe includes: ' + violated.nameSafe)
     }
     if (!nameViolation && !nameSafeViolation) {
       user.approve()

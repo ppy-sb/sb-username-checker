@@ -1,0 +1,22 @@
+{
+  "name": "usbc-plugin-ban",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppy-sb/sb-username-checker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ppy-sb/sb-username-checker/issues"
+  },
+  "homepage": "https://github.com/ppy-sb/sb-username-checker#readme",
+  "dependencies": {
+    "prompt-confirm": "^2.0.4"
+  }
+}
