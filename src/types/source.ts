@@ -6,22 +6,19 @@ export interface UserStat {
   email: string,
   banned: boolean
 }
+export interface CheckResult {
+  index: number,
+  length: number,
+  positive: string,
+}
 export interface UserHoldingNames {
   isDatabase: false
-  _id: number,
-  id: number,
   name: string,
-  name_safe: string,
-  is_active: boolean,
-  create_time: number,
-  inappropriate_check_date: Date,
-  inappropriate_checker_version: number,
   _rejected: boolean
   _rejectReason: string[],
-  reject_reason: string,
   _checkResult: {
-    name?: string[]
-    nameSafe?: string[]
+    name: CheckResult[]
+    nameSafe?: CheckResult[]
   }
   approve(): void,
   reject(reason: string): void
@@ -33,7 +30,19 @@ export interface DatabaseAddon<T> {
 }
 export interface DatabaseUserStat extends UserStat, DatabaseAddon<DatabaseUserStat> {}
 export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHoldingNames>, Omit<UserHoldingNames, 'isDatabase'> {
+  _id: number,
+  id: number,
   getStat(): Promise<DatabaseUserStat | null>
+  name_safe: string,
+  is_active: boolean,
+  create_time: number,
+  inappropriate_check_date: Date,
+  inappropriate_checker_version: number,
+  reject_reason: string,
+  _checkResult: {
+    name: CheckResult[]
+    nameSafe: CheckResult[]
+  }
 }
 
 export interface Source {

@@ -1,9 +1,7 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "pwa-node",
             "request": "launch",
@@ -15,6 +13,20 @@
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: dev sb-db",
+            "request": "launch",
+            "command": "npm run dev app-sb-db",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: dev cli-single",
+            "request": "launch",
+            "command": "npm run dev single-test",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

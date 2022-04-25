@@ -12,26 +12,42 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
       nameSafe: undefined
     }
     const nameViolation = forbidden.some(forbiddenWord => {
-      const contains = user.name.includes(forbiddenWord)
+      const index = user.name.indexOf(forbiddenWord)
+      const contains = index !== -1
       if (!contains) { return false }
-      user._checkResult.name?.push(forbiddenWord)
+      user._checkResult.name?.push({
+        index,
+        length: forbiddenWord.length,
+        positive: forbiddenWord
+      })
       violated.name = forbiddenWord
-      return true
-    })
-    const nameSafeViolation = forbidden.some(forbiddenWord => {
-      const contains = user.name_safe.includes(forbiddenWord)
-      if (!contains) { return false }
-      user._checkResult.nameSafe?.push(forbiddenWord)
-      violated.nameSafe = forbiddenWord
       return true
     })
     if (nameViolation) {
       user.reject('name includes: ' + violated.name)
     }
-    if (nameSafeViolation) {
-      user.reject('name_safe includes: ' + violated.nameSafe)
+    if (user.isDatabase) {
+      const nameSafeViolation = forbidden.some(forbiddenWord => {
+        const index = user.name_safe.indexOf(forbiddenWord)
+        const contains = index !== -1
+        if (!contains) { return false }
+        user._checkResult.name?.push({
+          index,
+          length: forbiddenWord.length,
+          positive: forbiddenWord
+        })
+        violated.nameSafe = forbiddenWord
+        return true
+      })
+      if (nameSafeViolation) {
+        user.reject('name_safe includes: ' + violated.nameSafe)
+      }
+      if (!nameViolation && !nameSafeViolation) {
+        user.approve()
+      }
+      return
     }
-    if (!nameViolation && !nameSafeViolation) {
+    if (!nameViolation) {
       user.approve()
     }
   })

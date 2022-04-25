@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cli-test": "ts-node-dev --require dotenv/config --respawn -r tsconfig-paths/register  src/cli/run-db.ts"
+    "dev": "ts-node-dev --require dotenv/config --respawn -r tsconfig-paths/register  src/commands/run.ts"
   },
   "workspaces": [
     "src/plugin/checker/*",

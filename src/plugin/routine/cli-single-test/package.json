@@ -1,0 +1,24 @@
+{
+  "name": "usbc-plugin-cli-single-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppy-sb/sb-username-checker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ppy-sb/sb-username-checker/issues"
+  },
+  "homepage": "https://github.com/ppy-sb/sb-username-checker#readme",
+  "dependencies": {
+    "@types/prompts": "^2.0.14",
+    "chalk": "^4.1.2",
+    "prompts": "^2.4.2"
+  }
+}

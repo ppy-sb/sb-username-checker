@@ -8,15 +8,15 @@
 // is_active, inappropriate_check_date, inappropriate_checker_version, create_time,
 // _rejected, _rejectReason, reject_reason, _checkResult
 import { SQLUserHoldingNames, SQLSource } from '../index'
-import { DatabaseUserHoldingNames } from 'types/source'
+import { DatabaseUserHoldingNames, CheckResult } from 'types/source'
 import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
   _before: unknown
   _rejected = false
   _rejectReason: string[] = []
   _checkResult: {
-    name: string[],
-    nameSafe: string[]
+    name: CheckResult[],
+    nameSafe: CheckResult[]
   } = {
       name: [],
       nameSafe: []

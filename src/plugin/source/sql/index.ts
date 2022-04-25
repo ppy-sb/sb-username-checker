@@ -1,6 +1,6 @@
 import { USBC } from 'app'
-import { UserHoldingNames, Database } from 'types/source'
-import { Sequelize, Model, CreationOptional, DataTypes, Options, Op, WhereOptions, FindOptions } from 'sequelize'
+import { DatabaseUserHoldingNames, Database } from 'types/source'
+import { Sequelize, Model, CreationOptional, DataTypes, Options, Op, WhereOptions } from 'sequelize'
 import { SearchParams } from 'plugin/config'
 import UserInfoWrapper from './models/Stat'
 import HoldingNamesWrapper from './models/HoldingNames'
@@ -21,7 +21,22 @@ export class SQLUserInfo extends Model {
   declare priv: number
 }
 // order of InferAttributes & InferCreationAttributes is important.
-export class SQLUserHoldingNames extends Model<Omit<UserHoldingNames, 'isDatabase' | 'reject' | 'approve' | 'inappropriate_check_date' | 'fetchUserHoldingNames' | '_rejected' | '_rejectReason' | '_checkResult'>> {
+export class SQLUserHoldingNames extends Model<
+  Omit<
+    DatabaseUserHoldingNames,
+    | 'isDatabase'
+    | 'reject'
+    | 'approve'
+    | 'inappropriate_check_date'
+    | 'fetchUserHoldingNames'
+    | '_rejected'
+    | '_rejectReason'
+    | '_checkResult'
+    | 'getStat'
+    | 'save'
+    | 'changes'
+    >
+  > {
   declare _id: CreationOptional<number>
   declare id: number
   declare name: string

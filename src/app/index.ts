@@ -1,5 +1,5 @@
 import { Callback, AppCallback, Config, Plugin } from 'types/useable'
-import { Database } from 'types/source'
+import { Database, UserHoldingNames, DatabaseUserHoldingNames } from 'types/source'
 import { SearchParams } from '../plugin/config'
 // import EventEmitter from 'events'
 
@@ -17,6 +17,17 @@ class Base {
   // source?: Source = undefined
   database?: Database = undefined
   _installed: Map<string |symbol, Callback | AppCallback> = new Map()
+
+  async check (user: UserHoldingNames | DatabaseUserHoldingNames) {
+    await Promise.all(this._checker.map(checker => checker(user)))
+    return user
+  }
+
+  async justify (user: UserHoldingNames | DatabaseUserHoldingNames) {
+    for (const mod of this._modifier) {
+      await mod(user)
+    }
+  }
 }
 
 export class USBC extends Base {
