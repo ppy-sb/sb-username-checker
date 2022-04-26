@@ -3,7 +3,7 @@ import { USBC } from 'app'
 
 export default function BanRejectedUserPlugin (app: USBC) {
   app.useModifier(async function BanRejectedUser (user) {
-    if (!user._rejected) return
+    if (!user.rejected) return
     if (!user.isDatabase) return
     const userInfo = await user.getStat()
     if (!userInfo) { throw new Error('user not found') }

@@ -15,7 +15,7 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
       const index = user.name.indexOf(forbiddenWord)
       const contains = index !== -1
       if (!contains) { return false }
-      user._checkResult.name?.push({
+      user.checkResult.name?.push({
         index,
         length: forbiddenWord.length,
         positive: forbiddenWord
@@ -31,7 +31,7 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
         const index = user.name_safe.indexOf(forbiddenWord)
         const contains = index !== -1
         if (!contains) { return false }
-        user._checkResult.name?.push({
+        user.checkResult.name?.push({
           index,
           length: forbiddenWord.length,
           positive: forbiddenWord

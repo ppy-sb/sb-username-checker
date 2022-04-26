@@ -6,15 +6,15 @@
 // declare reject_reason: string
 
 // is_active, inappropriate_check_date, inappropriate_checker_version, create_time,
-// _rejected, _rejectReason, reject_reason, _checkResult
+// rejected, rejectReason, reject_reason, checkResult
 import { SQLUserHoldingNames, SQLSource } from '../index'
 import { DatabaseUserHoldingNames, CheckResult } from 'types/source'
 import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
   _before: unknown
-  _rejected = false
-  _rejectReason: string[] = []
-  _checkResult: {
+  rejected = false
+  rejectReason: string[] = []
+  checkResult: {
     name: CheckResult[],
     nameSafe: CheckResult[]
   } = {
@@ -30,9 +30,9 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   approve () {}
   reject (reason: string) {
-    this._rejected = true
-    this._rejectReason.push(reason)
-    this.reject_reason = this._rejectReason.join('\n')
+    this.rejected = true
+    this.rejectReason.push(reason)
+    this.reject_reason = this.rejectReason.join('\n')
   }
 
   getStat () {
@@ -112,12 +112,12 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
     this._original.reject_reason = value
   }
 
-  // get _rejectReason () {
+  // get rejectReason () {
   //   this.reject_reason = this.#rejectReason.join('\n')
   //   return this.#rejectReason
   // }
 
-  // set _rejectReason (value) {
+  // set rejectReason (value) {
   //   this.#rejectReason = value
   //   this.reject_reason = value.join('\n')
   // }

@@ -23,9 +23,16 @@
         },
         {
             "type": "node-terminal",
-            "name": "Run Script: dev cli-single",
+            "name": "Run Script: dev cli-single-test",
             "request": "launch",
-            "command": "npm run dev single-test",
+            "command": "npm run dev single-test-cli",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: dev api",
+            "request": "launch",
+            "command": "npm run dev api",
             "cwd": "${workspaceFolder}"
         }
     ]

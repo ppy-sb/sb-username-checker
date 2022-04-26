@@ -1,9 +1,9 @@
 import createApp from './_load-plugins'
-import CliSingleTest from 'plugin/routine/cli-single-test'
+import Api from 'plugin/routine/single-test-api'
 
 (async () => {
   const app = await createApp()
-  app.use(CliSingleTest)
+  app.use(Api)
 
   await app.start()
   await app.run()

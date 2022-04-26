@@ -14,9 +14,9 @@ export interface CheckResult {
 export interface UserHoldingNames {
   isDatabase: false
   name: string,
-  _rejected: boolean
-  _rejectReason: string[],
-  _checkResult: {
+ rejected: boolean
+  rejectReason: string[],
+  checkResult: {
     name: CheckResult[]
     nameSafe?: CheckResult[]
   }
@@ -39,7 +39,7 @@ export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHold
   inappropriate_check_date: Date,
   inappropriate_checker_version: number,
   reject_reason: string,
-  _checkResult: {
+  checkResult: {
     name: CheckResult[]
     nameSafe: CheckResult[]
   }

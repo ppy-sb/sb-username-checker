@@ -15,22 +15,22 @@ export default function cliSingleTestPlugin (ctx: USBC) {
       const fakeUser: UserHoldingNames = {
         isDatabase: false,
         name,
-        _rejected: false,
-        _rejectReason: [],
-        _checkResult: {
+        rejected: false,
+        rejectReason: [],
+        checkResult: {
           name: []
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         approve () {},
         reject (reason) {
-          fakeUser._rejected = true
-          this._rejectReason.push(reason)
+          fakeUser.rejected = true
+          this.rejectReason.push(reason)
         }
       }
 
       await ctx.check(fakeUser)
       // console.log()
-      if (!fakeUser._rejected) {
+      if (!fakeUser.rejected) {
         console.log(
           chalk.black.bgCyan(name),
           ': ',
@@ -41,14 +41,14 @@ export default function cliSingleTestPlugin (ctx: USBC) {
           [chalk.black.bgRedBright(name), ': ',
             chalk.yellow('rejected.'), '\n',
             chalk.bold('reason:'), '\n',
-            chalk.gray(fakeUser._rejectReason.join(', \n')), '\n',
+            chalk.gray(fakeUser.rejectReason.join(', \n')), '\n',
             chalk.bold('marked rejection(s):'), '\n',
-            fakeUser._checkResult.name.map(({ index, length, positive }) => {
+            fakeUser.checkResult.name.map(({ index, length, positive }) => {
               const before = name.slice(0, index)
               const positivePart = name.slice(index, index + length)
               const after = name.slice(index + length)
               return [
-                before + chalk.bgCyanBright.black(positivePart) + after,
+                before + chalk.bgCyanBright.black(positivePart) + after
                 // ' '.repeat(index) + '^' + '~'.repeat(length)
               ].join('\n')
             }).join('\n')

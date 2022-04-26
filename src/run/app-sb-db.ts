@@ -1,6 +1,6 @@
 import createApp from './_load-plugins'
 import SQLSource from 'source/sql'
-import batchChecker from 'plugin/routine/database-batch-check'
+import batchChecker from 'plugin/routine/batch-check-database'
 
 (async () => {
   const app = await createApp()

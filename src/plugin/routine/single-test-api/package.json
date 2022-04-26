@@ -1,5 +1,5 @@
 {
-  "name": "usbc-plugin-ban",
+  "name": "usbc-plugin-single-test-api",
   "version": "1.0.0",
   "description": "",
   "main": "index",
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/ppy-sb/sb-username-checker#readme",
   "dependencies": {
-    "prompt-confirm": "^2.0.4"
+    "fastify": "^3.28.0"
   }
 }
