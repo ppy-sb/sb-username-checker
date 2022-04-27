@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --require dotenv/config --respawn -r tsconfig-paths/register  src/commands/run.ts",
     "live": "ts-node --require dotenv/config -r tsconfig-paths/register  src/commands/run.ts",
-    "built": "node --require dotenv/config -r tsconfig-paths/register  .built/commands/run.js",
-    "build": "tsc -p ."
+    "#build": "tsc -p tsconfig.json",
+    "#built": "node TS_NODE_BASEURL=./built --require dotenv/config -r tsconfig-paths/register .built/commands/run.js",
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "built": "node --require dotenv/config .built/commands/run.js"
   },
   "workspaces": [
     "src/plugin/checker/*",
@@ -26,6 +28,7 @@
     "eslint-config-standard": "^17.0.0",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
+    "tsc-alias": "^1.6.7",
     "tsconfig-paths": "^3.14.1",
     "typescript": "^4.6.3"
   },
