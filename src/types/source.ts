@@ -1,24 +1,15 @@
 import { SearchParams } from 'plugin/config'
-// import { CompareResult } from 'plugin/source/sql/utils/compare'
 export type DiffType = {
   N: 'create',
   D: 'delete',
   E: 'modify',
   A: 'modify-array'
 }
-// export enum DiffTypeEnum {
-//   N = 'create',
-//   D = 'delete',
-//   E = 'modify',
-//   A = 'modify-array'
-// }
-export type CompareResult<T> = {
+export type CompareResult<T, K extends keyof T> = {
   field: string[],
   op: DiffType[keyof DiffType],
-  before?: T,
-  after?: T
-  // before?: T extends DiffDeleted<T> | DiffEdit<T, U> ? T : never
-  // after?: U extends DiffNew<U> | DiffEdit<T, U> ? U : never
+  before?: Pick<T, K>,
+  after?: Pick<T, K>
 }
 export interface UserStat {
   id: number,
@@ -38,19 +29,14 @@ export interface UserHoldingNames {
   isDatabase: false
   name: string,
   rejected: boolean
-  // rejectReason: string[],
   checkResult: CheckResult[]
-  // checkResult: {
-  //   name: CheckResult[]
-  //   nameSafe?: CheckResult[]
-  // }
   approve(): void,
   reject(reason: CheckResult): void
 }
 export interface DatabaseAddon<T> {
   isDatabase: true
   save(): Promise<T>
-  changes(): CompareResult<keyof Omit<T, 'save' | 'approve' | 'reject' | 'rejected' | 'checkResult' | 'isDatabase'>>[]
+  changes(): CompareResult<T, keyof Omit<T, 'save' | 'approve' | 'reject' | 'rejected' | 'checkResult' | 'isDatabase'>>[]
 }
 export interface DatabaseUserStat extends DatabaseAddon<DatabaseUserStat>, Omit<UserStat, 'isDatabase'> {}
 export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHoldingNames>, Omit<UserHoldingNames, 'isDatabase'> {

@@ -2,8 +2,6 @@ import { Plugin } from 'types/useable'
 import { NotEmpty } from 'types/utils'
 export type cmp = '$gt' | '$gte' | '$eq' | '$lt' | '$lte' | '$ne'
 export type SearchParams = Partial<{
-  // version: OneKey<cmp, number>
-  // date: OneKey<cmp, Date>
   version: NotEmpty<Record<cmp, number>>,
   date: NotEmpty<Record<cmp, Date>>
 }>
