@@ -23,11 +23,11 @@ export class BatchChecker {
     if (!this._ctx.database) return
     if (!this._ctx.database.isDatabase) return
     const users = await this._ctx.database.fetchAllUserHoldingNames(this._ctx._searchParams)
-    await Promise.all(users.map(async user => {
-      if (!user) return
-      const { rejected } = await this._ctx.check(user)
+    await Promise.all(users.map(async checkName => {
+      if (!checkName) return
+      const { rejected } = await this._ctx.check(checkName)
 
-      if (rejected) { this.rejected.push(user) } else { this.approved.push(user) }
+      if (rejected) { this.rejected.push(checkName) } else { this.approved.push(checkName) }
     }))
   }
 
@@ -36,30 +36,29 @@ export class BatchChecker {
   }
 
   async removeinappropriateChars () {
-    for (const user of this.rejected) {
-      await this._ctx.justify(user)
+    for (const checkName of this.rejected) {
+      await this._ctx.justify(checkName)
     }
   }
 
   async printTable () {
-    const table = this.rejected.map(user => ({
-      id: user.id,
-      name: user.name,
-      name_safe: user.name_safe,
-      // 'reject reason': user.rejectReason.join('; '),
-      'reject reason': user.reject_reason
+    const table = this.rejected.map(checkName => ({
+      id: checkName.id,
+      name: checkName.name,
+      safeName: checkName.safeName,
+      'reject reason': checkName.rejectReason
     }))
     console.log('test positives:')
-    console.table(table, ['id', 'name', 'name_safe', 'reject reason'])
+    console.table(table, ['id', 'name', 'safeName', 'reject reason'])
     console.log('commits in username:')
     console.table(
-      this.rejected.reduce((acc: any, user) => {
-        const commits = user.changes()
-        // return { user, commits }
+      this.rejected.reduce((acc: any, checkName) => {
+        const commits = checkName.changes()
+        // return { checkName, commits }
         acc.push(...commits.map(commit => {
           return {
-            index: user.id,
-            name: user.name,
+            index: checkName.id,
+            name: checkName.name,
             commit: commit.op,
             field: commit.field.join('.'),
             content: `${commit.before} -> ${commit.after}`
@@ -69,21 +68,21 @@ export class BatchChecker {
       }, []), ['index', 'name', 'commit', 'field', 'content']
     )
     const commit: { index: number; name: string; commit: string; content: string, field: string }[] = []
-    await Promise.all(this.rejected.map(async user => {
-      const info = await user.getStat()
+    await Promise.all(this.rejected.map(async checkName => {
+      const info = await checkName.getStat()
       if (!info) return
       const commits = await info?.changes() || []
       commit.push(...commits.map(commit => {
         return {
-          index: user.id,
-          name: user.name,
+          index: checkName.id,
+          name: checkName.name,
           commit: commit.op,
           field: commit.field.join('.'),
           content: `${commit.before} -> ${commit.after}`
         }
       }))
     }))
-    console.log('commits in user stat:')
+    console.log('commits in checkName stat:')
     console.table(commit, ['index', 'name', 'commit', 'field', 'content'])
     // console.log()
   }
@@ -94,10 +93,10 @@ export class BatchChecker {
     await this._ctx.database.updateUserHoldingNames(this.approved)
     await this._ctx.database.updateUserHoldingNames(this.rejected)
     const active = await Promise.all(
-      this.rejected.filter(user => user.is_active)
-        .map(user => user.getStat())
+      this.rejected.filter(checkName => checkName.active)
+        .map(checkName => checkName.getStat())
     )
-    const activeUsernames = active.filter((user): user is DatabaseUserStat => !!user)
+    const activeUsernames = active.filter((checkName): checkName is DatabaseUserStat => !!checkName)
     await this._ctx.database?.updateUsers(activeUsernames)
   }
 }

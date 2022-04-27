@@ -2,26 +2,29 @@ import { SearchParams } from 'plugin/config'
 export interface UserStat {
   id: number,
   name: string,
-  name_safe: string,
+  safeName: string,
   email: string,
   banned: boolean
 }
 export interface CheckResult {
+  field: 'name' | 'safeName'
   index: number,
   length: number,
   positive: string,
+  message: string
 }
 export interface UserHoldingNames {
   isDatabase: false
   name: string,
- rejected: boolean
-  rejectReason: string[],
-  checkResult: {
-    name: CheckResult[]
-    nameSafe?: CheckResult[]
-  }
+  rejected: boolean
+  // rejectReason: string[],
+  checkResult: CheckResult[]
+  // checkResult: {
+  //   name: CheckResult[]
+  //   nameSafe?: CheckResult[]
+  // }
   approve(): void,
-  reject(reason: string): void
+  reject(reason: CheckResult): void
 }
 export interface DatabaseAddon<T> {
   isDatabase: true
@@ -33,16 +36,12 @@ export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHold
   _id: number,
   id: number,
   getStat(): Promise<DatabaseUserStat | null>
-  name_safe: string,
-  is_active: boolean,
-  create_time: number,
-  inappropriate_check_date: Date,
-  inappropriate_checker_version: number,
-  reject_reason: string,
-  checkResult: {
-    name: CheckResult[]
-    nameSafe: CheckResult[]
-  }
+  safeName: string,
+  active: boolean,
+  createTime: number,
+  checkDate: Date,
+  checkerVersion: number,
+  rejectReason: string,
 }
 
 export interface Source {

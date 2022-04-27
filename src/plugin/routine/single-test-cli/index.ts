@@ -16,15 +16,12 @@ export default function cliSingleTestPlugin (ctx: USBC) {
         isDatabase: false,
         name,
         rejected: false,
-        rejectReason: [],
-        checkResult: {
-          name: []
-        },
+        checkResult: [],
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         approve () {},
         reject (reason) {
           fakeUser.rejected = true
-          this.rejectReason.push(reason)
+          this.checkResult.push(reason)
         }
       }
 
@@ -40,16 +37,16 @@ export default function cliSingleTestPlugin (ctx: USBC) {
         console.log(
           [chalk.black.bgRedBright(name), ': ',
             chalk.yellow('rejected.'), '\n',
-            chalk.bold('reason:'), '\n',
-            chalk.gray(fakeUser.rejectReason.join(', \n')), '\n',
             chalk.bold('marked rejection(s):'), '\n',
-            fakeUser.checkResult.name.map(({ index, length, positive }) => {
+            fakeUser.checkResult.map(({ field, index, length, message }) => {
+              if (field === 'safeName') return null
+              const name = fakeUser[field]
               const before = name.slice(0, index)
               const positivePart = name.slice(index, index + length)
               const after = name.slice(index + length)
               return [
-                before + chalk.bgCyanBright.black(positivePart) + after
-                // ' '.repeat(index) + '^' + '~'.repeat(length)
+                before + chalk.bgCyanBright.black(positivePart) + after,
+                ' '.repeat(index) + '^ ' + message
               ].join('\n')
             }).join('\n')
           ].join(''))

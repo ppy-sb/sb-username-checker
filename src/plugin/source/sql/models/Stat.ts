@@ -1,5 +1,5 @@
-/* eslint-disable camelcase */
-import { SQLUserInfo, SQLSource } from '../index'
+import { SQLSource } from '../index'
+import { SQLUserInfo } from '../squelize-models/SQLUserInfo'
 import Base from './Base'
 export default class UserInfoWrapper extends Base<SQLUserInfo> {
   _before: unknown
@@ -13,14 +13,14 @@ export default class UserInfoWrapper extends Base<SQLUserInfo> {
     const {
       id,
       name,
-      name_safe,
+      safeName,
       email,
       banned
     } = this
     return {
       id,
       name,
-      name_safe,
+      safeName,
       email,
       banned
     }
@@ -42,11 +42,11 @@ export default class UserInfoWrapper extends Base<SQLUserInfo> {
     this._original.name = value
   }
 
-  get name_safe () {
+  get safeName () {
     return this._original.safe_name
   }
 
-  set name_safe (value) {
+  set safeName (value) {
     this._original.safe_name = value
   }
 

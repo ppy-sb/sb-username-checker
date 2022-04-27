@@ -10,18 +10,15 @@ export interface Options {
 }
 export default function RenameUserPlugin (ctx: USBC, options: Options) {
   if (!options.replaceWith) options.replaceWith = '*'
-  ctx.useModifier(async (user) => {
-    if (user.isDatabase !== true) return
-    const userStat = await user.getStat()
+  ctx.useModifier(async (checkName) => {
+    if (checkName.isDatabase !== true) return
+    const userStat = await checkName.getStat()
     if (!options.when.banned && userStat?.banned) return
-    if (options.when.oldVersion && user.inappropriate_checker_version >= ctx._version) return
-    if (options.when.sameVersion && user.inappropriate_checker_version !== ctx._version) return
-    if (options.when.lastScanNewerThan && user.inappropriate_check_date <= options.when.lastScanNewerThan) return
-    user.checkResult.name?.forEach(({ positive }) => {
-      user.name = user.name.split(positive).join(options.replaceWith.repeat(positive.length || 1))
-    })
-    user.checkResult.nameSafe?.forEach(({ positive }) => {
-      user.name_safe = user.name_safe.split(positive).join(options.replaceWith.repeat(positive.length || 1))
+    if (options.when.oldVersion && checkName.checkerVersion >= ctx._version) return
+    if (options.when.sameVersion && checkName.checkerVersion !== ctx._version) return
+    if (options.when.lastScanNewerThan && checkName.checkDate <= options.when.lastScanNewerThan) return
+    checkName.checkResult.forEach(({ positive }) => {
+      checkName.name = checkName.name.split(positive).join(options.replaceWith.repeat(positive.length || 1))
     })
   })
 }

@@ -1,26 +1,11 @@
-/* eslint-disable camelcase */
-// declare is_active: boolean
-// declare inappropriate_check_date: Date
-// declare inappropriate_checker_version: number
-// declare create_time: number
-// declare reject_reason: string
-
-// is_active, inappropriate_check_date, inappropriate_checker_version, create_time,
-// rejected, rejectReason, reject_reason, checkResult
-import { SQLUserHoldingNames, SQLSource } from '../index'
+import { SQLSource } from '../index'
+import { SQLUserHoldingNames } from '../squelize-models/SQLUserHoldingNames'
 import { DatabaseUserHoldingNames, CheckResult } from 'types/source'
 import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
   _before: unknown
   rejected = false
-  rejectReason: string[] = []
-  checkResult: {
-    name: CheckResult[],
-    nameSafe: CheckResult[]
-  } = {
-      name: [],
-      nameSafe: []
-    }
+  checkResult: CheckResult[] = []
 
   constructor (doc: SQLUserHoldingNames, db: SQLSource) {
     super(doc, db)
@@ -29,10 +14,10 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   approve () {}
-  reject (reason: string) {
+  reject (reason: CheckResult) {
     this.rejected = true
-    this.rejectReason.push(reason)
-    this.reject_reason = this.rejectReason.join('\n')
+    this.checkResult.push(reason)
+    this.rejectReason = this.checkResult.map(({ field, message, index, length }) => `${field}[${index}~${index + length}]: ${message}`).join(',\n')
   }
 
   getStat () {
@@ -44,23 +29,23 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
       _id,
       id,
       name,
-      name_safe,
-      is_active,
-      reject_reason,
-      inappropriate_check_date,
-      inappropriate_checker_version,
-      create_time
+      safeName,
+      active,
+      rejectReason,
+      checkDate,
+      checkerVersion,
+      createTime
     } = this
     return {
       _id,
       id,
       name,
-      name_safe,
-      is_active,
-      reject_reason,
-      inappropriate_check_date,
-      inappropriate_checker_version,
-      create_time
+      safeName,
+      active,
+      rejectReason,
+      checkDate,
+      checkerVersion,
+      createTime
     }
   }
 
@@ -88,61 +73,51 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
     this._original.name = value
   }
 
-  get name_safe () {
+  get safeName () {
     return this._original.name_safe
   }
 
-  set name_safe (value) {
+  set safeName (value) {
     this._original.name_safe = value
   }
 
-  get is_active () {
+  get active () {
     return this._original.is_active
   }
 
-  set is_active (value) {
+  set active (value) {
     this._original.is_active = value
   }
 
-  get reject_reason () {
+  get rejectReason () {
     return this._original.reject_reason
   }
 
-  set reject_reason (value) {
+  set rejectReason (value) {
     this._original.reject_reason = value
   }
 
-  // get rejectReason () {
-  //   this.reject_reason = this.#rejectReason.join('\n')
-  //   return this.#rejectReason
-  // }
-
-  // set rejectReason (value) {
-  //   this.#rejectReason = value
-  //   this.reject_reason = value.join('\n')
-  // }
-
-  get inappropriate_check_date () {
+  get checkDate () {
     return this._original.inappropriate_check_date
   }
 
-  set inappropriate_check_date (value) {
+  set checkDate (value) {
     this._original.inappropriate_check_date = value
   }
 
-  get inappropriate_checker_version () {
+  get checkerVersion () {
     return this._original.inappropriate_checker_version
   }
 
-  set inappropriate_checker_version (value) {
+  set checkerVersion (value) {
     this._original.inappropriate_checker_version = value
   }
 
-  get create_time () {
+  get createTime () {
     return this._original.create_time
   }
 
-  set create_time (value) {
+  set createTime (value) {
     this._original.create_time = value
   }
 }

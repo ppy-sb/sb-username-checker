@@ -1,10 +1,11 @@
 import { USBC } from 'app'
-import { DatabaseUserHoldingNames, Database } from 'types/source'
-import { Sequelize, Model, CreationOptional, DataTypes, Options, Op, WhereOptions } from 'sequelize'
+import { Database } from 'types/source'
+import { Sequelize, Options, Op, WhereOptions } from 'sequelize'
 import { SearchParams } from 'plugin/config'
 import UserInfoWrapper from './models/Stat'
 import HoldingNamesWrapper from './models/HoldingNames'
-
+import { SQLUserInfo, init as initSQLUserInfo } from './squelize-models/SQLUserInfo'
+import { SQLUserHoldingNames, init as initSQLHoldingNames } from './squelize-models/SQLUserHoldingNames'
 export interface PluginOptions {
   sequelize: Options | string,
   table: {
@@ -12,41 +13,8 @@ export interface PluginOptions {
     stat: string,
   }
 }
-export class SQLUserInfo extends Model {
-  declare id: number
-  declare name: string
-  declare safe_name: string
-  declare email: string
-  declare banned: boolean
-  declare priv: number
-}
+
 // order of InferAttributes & InferCreationAttributes is important.
-export class SQLUserHoldingNames extends Model<
-  Omit<
-    DatabaseUserHoldingNames,
-    | 'isDatabase'
-    | 'reject'
-    | 'approve'
-    | 'inappropriate_check_date'
-    | 'fetchUserHoldingNames'
-    | 'rejected'
-    | 'rejectReason'
-    | 'checkResult'
-    | 'getStat'
-    | 'save'
-    | 'changes'
-    >
-  > {
-  declare _id: CreationOptional<number>
-  declare id: number
-  declare name: string
-  declare name_safe: string
-  declare is_active: boolean
-  declare inappropriate_check_date: Date
-  declare inappropriate_checker_version: number
-  declare create_time: number
-  declare reject_reason: string
-}
 export class SQLSource implements Database {
   _db?: Sequelize = undefined
   _options: PluginOptions
@@ -130,41 +98,8 @@ export class SQLSource implements Database {
 
   async start () {
     if (!this._db) return
-    SQLUserHoldingNames.init({
-      _id: { type: DataTypes.INTEGER, primaryKey: true },
-      id: { type: DataTypes.INTEGER },
-      name: { type: DataTypes.STRING },
-      name_safe: { type: DataTypes.STRING },
-      is_active: { type: DataTypes.BOOLEAN },
-      inappropriate_checker_version: {
-        type: DataTypes.INTEGER.ZEROFILL,
-        defaultValue: 0,
-        allowNull: false
-      },
-      create_time: { type: DataTypes.INTEGER },
-      reject_reason: { type: DataTypes.STRING }
-    }, {
-      sequelize: this._db,
-      modelName: 'UsingNames',
-      tableName: this._options.table.history || 'name_legality',
-      createdAt: false,
-      updatedAt: 'inappropriate_check_date'
-    })
-    SQLUserInfo.init({
-      id: { type: DataTypes.INTEGER, primaryKey: true },
-      name: { type: DataTypes.STRING },
-      safe_name: { type: DataTypes.STRING },
-      email: { type: DataTypes.STRING },
-      priv: { type: DataTypes.INTEGER }
-    }, {
-      sequelize: this._db,
-      modelName: 'UserStat',
-      createdAt: false,
-      updatedAt: false,
-      tableName: this._options.table.stat || 'users'
-    })
-    // SQLUserHoldingNames.belongsTo(SQLUserInfo)
-    // SQLUserInfo.hasMany(SQLUserHoldingNames, { as: 'old_names' })
+    initSQLUserInfo(this)
+    initSQLHoldingNames(this)
     await this._db.authenticate()
       .then(() => console.log('Connection has been established successfully.'))
       .catch(err => console.error('Unable to connect to the source:', err))

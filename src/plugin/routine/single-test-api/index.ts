@@ -16,15 +16,12 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = { 
         isDatabase: false,
         name,
         rejected: false,
-        rejectReason: [],
-        checkResult: {
-          name: []
-        },
+        checkResult: [],
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         approve () {},
         reject (reason) {
           fakeUser.rejected = true
-          this.rejectReason.push(reason)
+          this.checkResult.push(reason)
         }
       }
       await ctx.check(fakeUser)
