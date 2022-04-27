@@ -13,8 +13,8 @@ class Base {
 
   _checker: Callback[] = []
   _modifier: Callback[] = []
+  _configurator : AppCallback[] = []
   _app: AppCallback[] = []
-  // source?: Source = undefined
   database?: Database = undefined
   _installed: Map<string |symbol, Callback | AppCallback> = new Map()
 
@@ -32,22 +32,6 @@ class Base {
 
 export class USBC extends Base {
   _current: string | symbol = ''
-  // _emitter: EventEmitter = new EventEmitter()
-  // emit (eventName: string | symbol, ...rest: any[]) {
-  //   return this._emitter.emit(eventName, ...rest)
-  // }
-
-  // on (eventName: string | symbol, listener: (...args: any[]) => void) {
-  //   return this._emitter.on(eventName, listener)
-  // }
-
-  // once (eventName: string | symbol, listener: (...args: any[]) => void) {
-  //   return this._emitter.once(eventName, listener)
-  // }
-
-  // off (eventName: string | symbol, listener: (...args: any[]) => void) {
-  //   return this._emitter.off(eventName, listener)
-  // }
 
   register (name: string | symbol) {
     this._current = name
@@ -59,17 +43,13 @@ export class USBC extends Base {
     return rtn
   }
 
-  // async with(plugin: string | string[], plugin) {
-
-  // }
+  useConfig (application: AppCallback) {
+    this._configurator.push(application)
+  }
 
   useChecker (checker: Callback) {
     this._checker.push(checker)
   }
-
-  // useSource (source: Source) {
-  //   this.source = source
-  // }
 
   useDatabase (database: Database) {
     this.database = database
@@ -94,5 +74,18 @@ export class App extends USBC {
     for (const app of this._app) {
       await app(this)
     }
+  }
+
+  clone () {
+    const copy = new App()
+    ;['_checker', '_modifier', '_configurator', '_app'].forEach((key:string) => {
+      // @ts-expect-error you don't understand.
+      copy[key] = [...this[key]]
+    })
+    copy._searchParams = JSON.parse(JSON.stringify(this._searchParams))
+    copy._version = this._version
+    copy.database = this.database
+    copy._installed = new Map(this._installed)
+    return copy
   }
 }

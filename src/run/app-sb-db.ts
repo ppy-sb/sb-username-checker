@@ -3,7 +3,7 @@ import SQLSource from 'source/sql'
 import batchChecker from 'plugin/routine/batch-check-database'
 
 (async () => {
-  const app = await createApp()
+  const app = await createApp().then(app => app.clone())
 
   await app.use(SQLSource, {
     sequelize: process.env.SQL_URI || 'sqlite::memory:',
