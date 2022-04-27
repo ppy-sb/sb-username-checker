@@ -52,7 +52,13 @@ export class BatchChecker {
     console.table(table, ['id', 'name', 'safeName', 'reject reason'])
     console.log('commits in username:')
     console.table(
-      this.rejected.reduce((acc: any, checkName) => {
+      this.rejected.reduce((acc: Array<{
+        index: number,
+        name: string,
+        commit: string,
+        field: string,
+        content: string
+      }>, checkName) => {
         const commits = checkName.changes()
         // return { checkName, commits }
         acc.push(...commits.map(commit => {
@@ -108,13 +114,11 @@ export default function BatchCheckerPlugin (ctx: USBC) {
     await batchChecker.removeinappropriateChars()
     try {
       const commit = await batchChecker.confirm()
-      if (!commit) {
-        return
+      if (commit) {
+        await batchChecker.commitToSource()
       }
-      await batchChecker.commitToSource()
-    } catch (error: any) {
-      console.error(error.message)
+    } catch (error: unknown) {
+      if (error instanceof Error) console.error(error?.message)
     }
-    // await this._ctx.database?.stop()
   })
 }

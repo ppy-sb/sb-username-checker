@@ -1,4 +1,25 @@
 import { SearchParams } from 'plugin/config'
+// import { CompareResult } from 'plugin/source/sql/utils/compare'
+export type DiffType = {
+  N: 'create',
+  D: 'delete',
+  E: 'modify',
+  A: 'modify-array'
+}
+// export enum DiffTypeEnum {
+//   N = 'create',
+//   D = 'delete',
+//   E = 'modify',
+//   A = 'modify-array'
+// }
+export type CompareResult<T> = {
+  field: string[],
+  op: DiffType[keyof DiffType],
+  before?: T,
+  after?: T
+  // before?: T extends DiffDeleted<T> | DiffEdit<T, U> ? T : never
+  // after?: U extends DiffNew<U> | DiffEdit<T, U> ? U : never
+}
 export interface UserStat {
   id: number,
   name: string,
@@ -29,9 +50,9 @@ export interface UserHoldingNames {
 export interface DatabaseAddon<T> {
   isDatabase: true
   save(): Promise<T>
-  changes(): any[]
+  changes(): CompareResult<keyof Omit<T, 'save' | 'approve' | 'reject' | 'rejected' | 'checkResult' | 'isDatabase'>>[]
 }
-export interface DatabaseUserStat extends UserStat, DatabaseAddon<DatabaseUserStat> {}
+export interface DatabaseUserStat extends DatabaseAddon<DatabaseUserStat>, Omit<UserStat, 'isDatabase'> {}
 export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHoldingNames>, Omit<UserHoldingNames, 'isDatabase'> {
   _id: number,
   id: number,
@@ -58,15 +79,3 @@ export interface Database extends Omit<Source, 'isDatabase'> {
   fetchUserStats({ id }: {id:number}): Promise<DatabaseUserStat | null>
   fetchAllUserStats?(): Promise<Array<DatabaseUserStat | null>>
 }
-// export interface SingleShotSource {
-//   fetchAllUserHoldingNames(afterDate: Date): Promise<UserHoldingNames[]>
-//   approve(users: UserHoldingNames[]): void
-//   reject(users: UserHoldingNames[]): void
-// }
-// export interface StreamSource {
-//   fetchAllUserHoldingNames(afterDate: Date): Promise<UserHoldingNames[]>
-//   approve(users: UserHoldingNames[]): void
-//   reject(users: UserHoldingNames[]): void
-// }
-
-// export type Source = StreamSource | SingleShotSource

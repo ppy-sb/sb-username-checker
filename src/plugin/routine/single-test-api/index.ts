@@ -10,8 +10,12 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = { 
   const server = fastify(options.fastify)
   server.listen(options.port || 4532)
   ctx.useApplication(function TestAPI (ctx: USBC) {
-    server.get(options.prefix + '/:name', async (req, rep) => {
-      const name = (req.params as any).name
+    server.get<{
+      Params: {
+        name: string
+      },
+    }>(options.prefix + '/:name', async (req) => {
+      const name = req.params.name
       const fakeUser: UserHoldingNames = {
         isDatabase: false,
         name,

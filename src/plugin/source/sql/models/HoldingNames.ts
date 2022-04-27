@@ -3,7 +3,7 @@ import { SQLUserHoldingNames } from '../squelize-models/SQLUserHoldingNames'
 import { DatabaseUserHoldingNames, CheckResult } from 'types/source'
 import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
-  _before: unknown
+  _before
   rejected = false
   checkResult: CheckResult[] = []
 

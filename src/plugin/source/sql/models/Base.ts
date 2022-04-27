@@ -5,7 +5,7 @@ import { SQLSource } from '../index'
 export default abstract class ModelWrapper<T extends Model> {
   _original: T
   _db: SQLSource
-  abstract _before: unknown
+  abstract _before: Partial<ThisType<T>>
   isDatabase: true = true
 
   constructor (stat: T, db: SQLSource) {
@@ -13,7 +13,7 @@ export default abstract class ModelWrapper<T extends Model> {
     this._db = db
   }
 
-  abstract toJSON(): unknown
+  abstract toJSON(): Partial<ThisType<T>>
 
   changes () {
     const now = this.toJSON()
