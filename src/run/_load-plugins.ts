@@ -27,7 +27,7 @@ export default async function createApp () {
     strategy: 'remote',
     strategyOptions: {
       fetch: {
-        url: 'https://raw.githubusercontent.com/jkiss/sensitive-words/master/色情类.txt',
+        url: 'https://raw.githubusercontent.com/ppy-sb/sensitive-words/master/%E8%89%B2%E6%83%85%E7%B1%BB.txt',
         method: 'get'
       },
       splitter: ',\n'
