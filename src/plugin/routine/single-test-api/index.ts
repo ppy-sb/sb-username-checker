@@ -2,19 +2,20 @@ import { USBC } from 'app'
 import { UserHoldingNames } from 'types/source'
 import fastify, { FastifyServerOptions } from 'fastify'
 export interface APIOptions {
-  fastify: FastifyServerOptions,
+  fastify?: FastifyServerOptions,
   port?: number,
+  host?: string,
   prefix?: string
 }
-export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = { fastify: {}, prefix: '/test' }) {
+export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}) {
   const server = fastify(options.fastify)
-  server.listen(options.port || 4532)
+  server.listen(options.port || 4532, options.host)
   ctx.useApplication(function TestAPI (ctx: USBC) {
     server.get<{
       Params: {
         name: string
       },
-    }>(options.prefix + '/:name', async (req) => {
+    }>(options.prefix || '/test' + '/:name', async (req) => {
       const name = req.params.name
       const fakeUser: UserHoldingNames = {
         isDatabase: false,

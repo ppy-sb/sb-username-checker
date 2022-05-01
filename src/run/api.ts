@@ -3,7 +3,9 @@ import Api from 'plugin/routine/single-test-api'
 
 (async () => {
   const app = await createApp().then(app => app.clone())
-  app.use(Api)
+  app.use(Api, {
+    host: '::'
+  })
 
   await app.start()
   await app.run()
