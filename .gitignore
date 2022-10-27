@@ -128,4 +128,4 @@ dist
 
 
 #build
-.built
+.built.DS_Store
