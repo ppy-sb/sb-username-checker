@@ -129,3 +129,6 @@ dist
 #build
 .built
 .DS_Store
+
+package-lock.json
+yarn.lock
