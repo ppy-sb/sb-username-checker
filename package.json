@@ -1,11 +1,12 @@
 {
   "name": "sb-username-cheker",
+  "private": true,
   "version": "0.0.1",
   "description": "police!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --require dotenv/config --respawn -r tsconfig-paths/register  src/commands/run.ts",
+    "dev": "ts-node-dev --respawn -r dotenv/config  -r tsconfig-paths/register  src/commands/run.ts",
     "live": "ts-node --require dotenv/config -r tsconfig-paths/register  src/commands/run.ts",
     "#build": "tsc -p tsconfig.json",
     "#built": "node TS_NODE_BASEURL=./built --require dotenv/config -r tsconfig-paths/register .built/commands/run.js",
@@ -21,19 +22,19 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^17.0.25",
-    "@typescript-eslint/eslint-plugin": "^5.20.0",
-    "@typescript-eslint/parser": "^5.20.0",
-    "eslint": "^8.13.0",
-    "eslint-config-standard": "^17.0.0",
-    "ts-node": "^10.7.0",
-    "ts-node-dev": "^1.1.8",
-    "tsc-alias": "^1.6.7",
-    "tsconfig-paths": "^3.14.1",
-    "typescript": "^4.6.3"
+    "@types/node": "^20.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.3.1",
     "eastasianwidth": "^0.2.0"
   }
 }
