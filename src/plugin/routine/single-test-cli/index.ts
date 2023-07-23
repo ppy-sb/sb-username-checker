@@ -3,6 +3,9 @@ import { UserHoldingNames } from 'types/source'
 import prompts from 'prompts'
 import chalk from 'chalk'
 
+// @ts-expect-error no declaration
+import * as eaw from 'eastasianwidth'
+
 export default function cliSingleTestPlugin (ctx: USBC) {
   ctx.useApplication(async function LoopTest () {
     while (true) {
@@ -46,11 +49,14 @@ export default function cliSingleTestPlugin (ctx: USBC) {
               const after = name.slice(index + length)
               return [
                 before + chalk.bgCyanBright.black(positivePart) + after,
-                ' '.repeat(index) + '^ ' + message
+                handleFullWidth(before) + '^ ' + message
               ].join('\n')
             }).join('\n')
           ].join(''))
       }
     }
   })
+}
+function handleFullWidth (chars: string) {
+  return ' '.repeat(eaw.length(chars))
 }

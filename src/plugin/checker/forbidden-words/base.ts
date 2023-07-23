@@ -16,7 +16,7 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
         index,
         length: forbiddenWord.length,
         positive: forbiddenWord,
-        message: 'name includes: ' + forbiddenWord
+        message: 'forbidden word: ' + forbiddenWord
       })
       return true
     })
@@ -30,7 +30,7 @@ export default function TestCheckerPlugin (ctx: USBC, options: Options) {
           index,
           length: forbiddenWord.length,
           positive: forbiddenWord,
-          message: 'safeName includes: ' + forbiddenWord
+          message: 'forbidden word:: ' + forbiddenWord
         })
         return true
       })

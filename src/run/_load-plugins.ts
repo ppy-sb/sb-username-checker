@@ -20,7 +20,7 @@ export default async function createApp () {
   await app.use(v1Checker, {
     strategy: 'local',
     strategyOptions: {
-      file: 'assets/forbiddenwords.txt'
+      file: 'assets/forbidden.txt'
     }
   })
   await app.use(v1Checker, {
