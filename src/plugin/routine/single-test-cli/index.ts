@@ -58,9 +58,9 @@ function handleFullWidth (chars: string) {
   return ' '.repeat(eaw.length(chars))
 }
 
-const start = '┌ '
-const indent = '├── '
-const end = '└── '
+const start = '┏ '
+const indent = '┃   '
+const end = '┗   '
 
 function createMessage (fakeUser: UserHoldingNames, { index, length, message, markedBy }: CheckResult) {
   const name = fakeUser.name
@@ -77,7 +77,7 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ma
   }
 
   return [
-    start + chalk.underline(markedBy.name + ':'),
+    start + chalk.underline(markedBy.tag + ':'),
     indent + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
     end + handleFullWidth(before) + '^ ' + message
   ].join('\n')

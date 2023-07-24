@@ -4,22 +4,35 @@ export interface Options {
   forbidden: string[],
   separator: string
   whitelisted: string[],
-  name?: string
+  tag?: string,
+  ignoreCase?: boolean
 }
 
-function getAllIndexes (arr: string, val: string) {
-  const indexes = []; let i = -1
+function getAllIndexes (arr: string, val: string, ignoreCase = true) {
+  const indexes = []
+  let i = -1
+
+  if (ignoreCase) {
+    arr = arr.toLowerCase()
+    val = val.toLowerCase()
+  }
+
   while ((i = arr.indexOf(val, i + 1)) !== -1) {
     indexes.push(i)
   }
   return indexes
 }
 
-export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Options, 'forbidden' | 'name'>) {
-  const { forbidden, name } = options
+export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Options, 'forbidden' | 'tag' | 'ignoreCase'>) {
+  let { forbidden, tag, ignoreCase = true } = options
+  // ignore case
+  if (ignoreCase) {
+    forbidden = [...new Map(forbidden.map(val => [val.toLowerCase(), val])).values()]
+  }
+
   ctx.useChecker(function ForbiddenWordsChecker (check) {
     const nameViolation = forbidden.map(forbiddenWord => {
-      const indexes = getAllIndexes(check.name, forbiddenWord)
+      const indexes = getAllIndexes(check.name, forbiddenWord, ignoreCase)
       if (!indexes.length) {
         return false
       }
@@ -29,14 +42,14 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
         length: forbiddenWord.length,
         positive: forbiddenWord,
         message: 'forbidden word: ' + forbiddenWord,
-        markedBy: { name: name || ForbiddenWordsChecker.name }
+        markedBy: { tag: tag || ForbiddenWordsChecker.name }
       }))
       return true
     })
 
     if (check.isDatabase) {
       const safeNameViolation = forbidden.map(forbiddenWord => {
-        const indexes = getAllIndexes(check.name, forbiddenWord)
+        const indexes = getAllIndexes(check.name, forbiddenWord, ignoreCase)
         if (!indexes.length) {
           return false
         }
@@ -46,7 +59,7 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
           length: forbiddenWord.length,
           positive: forbiddenWord,
           message: 'forbidden word: ' + forbiddenWord,
-          markedBy: { name: name || ForbiddenWordsChecker.name }
+          markedBy: { tag: tag || ForbiddenWordsChecker.name }
         }))
         return true
       })

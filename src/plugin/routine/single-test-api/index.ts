@@ -26,7 +26,7 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}
     await ctx.check(fakeUser)
     return {
       ...fakeUser,
-      checkResult: fakeUser.checkResult.map(res => ({ ...res, markedBy: { name: res.markedBy.name } })),
+      checkResult: fakeUser.checkResult.map(res => ({ ...res, markedBy: { tag: res.markedBy.tag } })),
       isDatabase: undefined
     }
   }

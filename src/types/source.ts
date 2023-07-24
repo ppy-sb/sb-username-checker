@@ -24,7 +24,7 @@ export interface CheckResult {
   length: number,
   positive: string,
   message: string,
-  markedBy: {name: string}
+  markedBy: { tag: string }
 }
 export interface UserHoldingNames {
   isDatabase: false

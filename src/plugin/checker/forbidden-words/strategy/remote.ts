@@ -19,5 +19,6 @@ export default async function RemoteChecker (ctx: USBC, options: Partial<PluginO
   if (options.whitelisted) {
     options.forbidden = options.forbidden.filter(kw => options.whitelisted?.includes(kw) === false)
   }
-  return base(ctx, { ...options, name: `${RemoteChecker.name}<${options.fetch.url}>` } as PluginOptions)
+  const name = options.fetch ? options.fetch.url : options.tag
+  return base(ctx, { ...options, tag: `${RemoteChecker.name}<${name}>` } as PluginOptions)
 }

@@ -6,6 +6,8 @@ import rename from 'plugin/rename'
 import BanRejectedUserPlugin from 'plugin/ban'
 import LocalWhitelist from 'plugin/checker/whitelist/local'
 
+import words from 'naughty-words'
+
 export default async function createApp () {
   const app = new App()
 
@@ -34,12 +36,27 @@ export default async function createApp () {
     }
   })
   await app.use(v1Checker, {
+    strategy: 'local',
+    strategyOptions: {
+      forbidden: words.zh.concat([]),
+      tag: 'nopm::naughty-words::zh'
+    }
+  })
+  await app.use(v1Checker, {
+    strategy: 'local',
+    strategyOptions: {
+      forbidden: words.en.concat([]),
+      tag: 'npm::naughty-words::en'
+    }
+  })
+  await app.use(v1Checker, {
     strategy: 'remote',
     strategyOptions: {
       fetch: {
         url: 'https://raw.githubusercontent.com/cjh0613/tencent-sensitive-words/main/sensitive_words_lines.txt',
         method: 'get'
-      }
+      },
+      ignoreCase: false
     }
   })
   await app.use(LocalWhitelist, { file: 'assets/whitelisted.txt' })

@@ -15,5 +15,6 @@ export default async function LocalChecker (ctx: USBC, options: Partial<PluginOp
   if (options.whitelisted) {
     options.forbidden = options.forbidden.filter(kw => options.whitelisted?.includes(kw) === false)
   }
-  return base(ctx, { ...options, name: `${LocalChecker.name}<${options.file}>` } as PluginOptions)
+  const name = options.file ? options.file : options.tag
+  return base(ctx, { ...options, tag: `${LocalChecker.name}<${name}>` } as PluginOptions)
 }
