@@ -9,7 +9,7 @@ const getWords = (path: string) =>
 export default async function LocalChecker (ctx: USBC, options: Partial<PluginOptions> & { file?: string }) {
   if (!options.forbidden) options.forbidden = []
   if (options.file) {
-    const words = await getWords(options.file).then(words => words.split(options.separator || '\n'))
+    const words = await (await getWords(options.file).then(words => words.split(options.separator || '\n'))).filter(Boolean)
     if (options.file) options.forbidden = options.forbidden.concat(words)
   }
   if (options.whitelisted) {

@@ -12,17 +12,12 @@ export default async function createApp () {
   const app = new App()
 
   await Promise.all([
-    app.use(config, {
-      version: 2,
-      check: {
-        version: {
-          $lte: 2
-        }
-      }
-    }),
 
     app.use(LocalChecker, {
-      file: 'assets/forbidden.txt'
+      file: 'assets/forbidden-cn.txt'
+    }),
+    app.use(LocalChecker, {
+      file: 'assets/forbidden-en.txt'
     }),
 
     app.use(RemoteChecker, {

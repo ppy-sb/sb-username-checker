@@ -5,6 +5,15 @@ import BanRejectedUserPlugin from 'plugin/ban'
 export default function createDBApp () {
   return createApp().then(async app => {
     await Promise.all([
+      app.use(config, {
+        version: 2,
+        check: {
+          version: {
+            $lte: 2
+          }
+        }
+      }),
+
       app.use(BanRejectedUserPlugin),
 
       app.use(rename, {
