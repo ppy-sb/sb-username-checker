@@ -1,6 +1,7 @@
 import { USBC } from 'app'
 import { promises as fs } from 'fs'
-import base, { Options as PluginOptions } from 'checker/forbidden-words/base'
+import base from 'plugin/checker/forbidden-words'
+import { Options as PluginOptions } from '../type'
 const getWords = (path: string) =>
   fs.readFile(path, {
     encoding: 'utf8'

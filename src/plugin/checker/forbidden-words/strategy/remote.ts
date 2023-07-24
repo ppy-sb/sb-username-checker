@@ -1,6 +1,7 @@
 import { USBC } from 'app'
 import axios, { AxiosRequestConfig } from 'axios'
-import base, { Options as PluginOptions } from 'checker/forbidden-words/base'
+import base from 'plugin/checker/forbidden-words'
+import { Options as PluginOptions } from '../type'
 
 const getWords = (opt: AxiosRequestConfig): Promise<string> =>
   axios({

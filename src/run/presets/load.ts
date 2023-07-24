@@ -17,7 +17,8 @@ export default async function createApp () {
       file: 'assets/forbidden-cn.txt'
     }),
     app.use(LocalChecker, {
-      file: 'assets/forbidden-en.txt'
+      file: 'assets/forbidden-en.txt',
+      spaced: true
     }),
 
     app.use(RemoteChecker, {
@@ -35,7 +36,8 @@ export default async function createApp () {
 
     app.use(LocalChecker, {
       forbidden: words.en.concat([]),
-      tag: 'npm::naughty-words::en'
+      tag: 'npm::naughty-words::en',
+      spaced: true
     }),
 
     app.use(RemoteChecker, {

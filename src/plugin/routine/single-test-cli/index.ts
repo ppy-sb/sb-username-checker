@@ -12,7 +12,7 @@ export default function cliSingleTestPlugin (ctx: USBC) {
       const { name }: { name: string | undefined } = await prompts({
         type: 'text',
         name: 'name',
-        message: 'try name:'
+        message: 'test case:'
       })
 
       if (!name) {
@@ -75,7 +75,7 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ta
     before = '...' + before.slice(-8)
   }
   if (after.length >= 8) {
-    after = after.slice(0, -8) + '...'
+    after = after.slice(0, 8) + '...'
   }
 
   return [
