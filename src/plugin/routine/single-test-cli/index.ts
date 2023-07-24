@@ -75,7 +75,7 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ta
     before = '...' + before.slice(-8)
   }
   if (after.length >= 8) {
-    after = after.slice(-8) + '...'
+    after = after.slice(0, -8) + '...'
   }
 
   return [
