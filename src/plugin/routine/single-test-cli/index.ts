@@ -55,13 +55,14 @@ export default function cliSingleTestPlugin (ctx: USBC) {
   })
 }
 function handleFullWidth (chars: string) {
-  return ' '.repeat(eaw.length(chars))
+  return '━'.repeat(eaw.length(chars))
 }
 
-const start = '┏ '
-const header = '┣ '
-const indent = '┃   '
-const end = '┗   '
+const start = '┏'
+const header = '┣'
+const indent = '┃'
+const end = '┗'
+const sp = ' '
 
 function createMessage (fakeUser: UserHoldingNames, { index, length, message, tags }: CheckResult) {
   const name = fakeUser.name
@@ -78,8 +79,8 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ta
   }
 
   return [
-    ...tags.map((tag, index) => (index ? header : start) + chalk.underline(tag + ':')),
-    indent + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
-    end + handleFullWidth(before) + '^ ' + message
+    ...tags.map((tag, index) => (index ? header : start) + sp + chalk.underline(tag + ':')),
+    indent + sp + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
+    end + handleFullWidth(before) + sp + 'ˆ ' + message
   ].join('\n')
 }

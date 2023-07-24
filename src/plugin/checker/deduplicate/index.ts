@@ -20,7 +20,7 @@ export default function Deduplicate (ctx: USBC) {
       if (!duplicate) {
         check.checkResult.push(head)
       } else {
-        duplicate.tags = [...new Set(duplicate.tags.concat(head.tags))]
+        duplicate.tags = [...new Set(head.tags.concat(duplicate.tags))]
       }
     }
   })
