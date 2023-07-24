@@ -9,11 +9,15 @@ import * as eaw from 'eastasianwidth'
 export default function cliSingleTestPlugin (ctx: USBC) {
   ctx.useApplication(async function LoopTest () {
     while (true) {
-      const { name }: { name: string } = await prompts({
+      const { name }: { name: string | undefined } = await prompts({
         type: 'text',
         name: 'name',
         message: 'try name:'
       })
+
+      if (!name) {
+        break
+      }
 
       const fakeUser: UserHoldingNames = {
         isDatabase: false,
@@ -46,6 +50,8 @@ export default function cliSingleTestPlugin (ctx: USBC) {
           ].join(''))
       }
     }
+
+    process.exit(0)
   })
 }
 function handleFullWidth (chars: string) {
