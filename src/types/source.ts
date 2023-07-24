@@ -23,7 +23,8 @@ export interface CheckResult {
   index: number,
   length: number,
   positive: string,
-  message: string
+  message: string,
+  markedBy: {name: string}
 }
 export interface UserHoldingNames {
   isDatabase: false
@@ -38,7 +39,7 @@ export interface DatabaseAddon<T> {
   save(): Promise<T>
   changes(): CompareResult<T, keyof Omit<T, 'save' | 'approve' | 'reject' | 'rejected' | 'checkResult' | 'isDatabase'>>[]
 }
-export interface DatabaseUserStat extends DatabaseAddon<DatabaseUserStat>, Omit<UserStat, 'isDatabase'> {}
+export interface DatabaseUserStat extends DatabaseAddon<DatabaseUserStat>, Omit<UserStat, 'isDatabase'> { }
 export interface DatabaseUserHoldingNames extends DatabaseAddon<DatabaseUserHoldingNames>, Omit<UserHoldingNames, 'isDatabase'> {
   _id: number,
   id: number,
@@ -62,6 +63,6 @@ export interface Database extends Omit<Source, 'isDatabase'> {
   updateUsers<T extends DatabaseUserStat>(users: T[]): Promise<T[]>
   fetchUserHoldingNames(find: SearchParams): Promise<DatabaseUserHoldingNames | null>
   fetchAllUserHoldingNames(find: SearchParams): Promise<Array<DatabaseUserHoldingNames>>
-  fetchUserStats({ id }: {id:number}): Promise<DatabaseUserStat | null>
+  fetchUserStats({ id }: { id: number }): Promise<DatabaseUserStat | null>
   fetchAllUserStats?(): Promise<Array<DatabaseUserStat | null>>
 }

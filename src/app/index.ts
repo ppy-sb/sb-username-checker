@@ -13,10 +13,10 @@ class Base {
 
   _checker: Callback[] = []
   _modifier: Callback[] = []
-  _configurator : AppCallback[] = []
+  _configurator: AppCallback[] = []
   _app: AppCallback[] = []
   database?: Database = undefined
-  _installed: Map<string |symbol, Callback | AppCallback> = new Map()
+  _installed: Map<string | symbol, Callback | AppCallback> = new Map()
 
   async check (user: UserHoldingNames | DatabaseUserHoldingNames) {
     await Promise.all(this._checker.map(checker => checker(user)))
@@ -37,7 +37,7 @@ export class USBC extends Base {
     this._current = name
   }
 
-  async use<T extends Plugin> (plugin: T, options?: Config<T>): Promise<ReturnType<T>> {
+  async use<T extends Plugin> (plugin: T, options?: Config<T>): Promise<void> {
     this._current = plugin.name || Symbol('plugin:' + plugin.name)
     const rtn = await plugin(this, options)
     return rtn
@@ -78,7 +78,7 @@ export class App extends USBC {
 
   clone () {
     const copy = new App()
-    ;['_checker', '_modifier', '_configurator', '_app'].forEach((key:string) => {
+      ;['_checker', '_modifier', '_configurator', '_app'].forEach((key: string) => {
       // @ts-expect-error you don't understand.
       copy[key] = [...this[key]]
     })

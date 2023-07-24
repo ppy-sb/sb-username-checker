@@ -33,7 +33,7 @@ export class SQLSource implements Database {
   }
 
   _modifySearchParams (find: SearchParams): WhereOptions {
-    const f:Record<string, Record<string, unknown>> = JSON.parse(JSON.stringify(find))
+    const f: Record<string, Record<string, unknown>> = JSON.parse(JSON.stringify(find))
     Object.values(f).forEach(ops => {
       Object.entries(ops).forEach(([op, value]) => {
         if (!op.startsWith('$')) throw new Error('unsupported op ' + op)
@@ -72,7 +72,7 @@ export class SQLSource implements Database {
     }).then(res => res && new HoldingNamesWrapper(res, this))
   }
 
-  async fetchUserStats (find: {id: number}): Promise<UserInfoWrapper | null> {
+  async fetchUserStats (find: { id: number }): Promise<UserInfoWrapper | null> {
     const cache = this._relational.get(`stat-${find.id}`)
     if (cache) return cache
     const result = await SQLUserInfo.findOne({

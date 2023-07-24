@@ -13,7 +13,7 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  approve () {}
+  approve () { }
   reject (reason: CheckResult) {
     this.rejected = true
     this.checkResult.push(reason)

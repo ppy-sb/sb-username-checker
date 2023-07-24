@@ -1,5 +1,5 @@
 import { USBC } from 'app'
-import { UserHoldingNames } from 'types/source'
+import { CheckResult, UserHoldingNames } from 'types/source'
 import prompts from 'prompts'
 import chalk from 'chalk'
 
@@ -21,7 +21,7 @@ export default function cliSingleTestPlugin (ctx: USBC) {
         rejected: false,
         checkResult: [],
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        approve () {},
+        approve () { },
         reject (reason) {
           fakeUser.rejected = true
           this.checkResult.push(reason)
@@ -29,28 +29,19 @@ export default function cliSingleTestPlugin (ctx: USBC) {
       }
 
       await ctx.check(fakeUser)
+      await ctx.justify(fakeUser)
       // console.log()
       if (!fakeUser.rejected) {
         console.log(
-          chalk.black.bgCyan(name),
-          ': ',
           chalk.green('looks good!')
         )
       } else {
         console.log(
-          [chalk.black.bgRedBright(name), ': ',
+          [
             chalk.yellow('rejected.'), '\n',
             chalk.bold('marked rejection(s):'), '\n',
-            fakeUser.checkResult.map(({ field, index, length, message }) => {
-              if (field === 'safeName') return null
-              const name = fakeUser[field]
-              const before = name.slice(0, index)
-              const positivePart = name.slice(index, index + length)
-              const after = name.slice(index + length)
-              return [
-                before + chalk.bgCyanBright.black(positivePart) + after,
-                handleFullWidth(before) + '^ ' + message
-              ].join('\n')
+            fakeUser.checkResult.map((result) => {
+              return createMessage(fakeUser, result)
             }).join('\n')
           ].join(''))
       }
@@ -59,4 +50,29 @@ export default function cliSingleTestPlugin (ctx: USBC) {
 }
 function handleFullWidth (chars: string) {
   return ' '.repeat(eaw.length(chars))
+}
+
+const start = '┌ '
+const indent = '├── '
+const end = '└── '
+
+function createMessage (fakeUser: UserHoldingNames, { index, length, message, markedBy }: CheckResult) {
+  const name = fakeUser.name
+
+  let before = name.slice(0, index)
+  const positivePart = name.slice(index, index + length)
+  let after = name.slice(index + length)
+
+  if (before.length >= 8) {
+    before = '...' + before.slice(-8)
+  }
+  if (after.length >= 8) {
+    after = after.slice(-8) + '...'
+  }
+
+  return [
+    start + chalk.underline(markedBy.name + ':'),
+    indent + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
+    end + handleFullWidth(before) + '^ ' + message
+  ].join('\n')
 }

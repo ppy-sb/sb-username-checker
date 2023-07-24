@@ -6,7 +6,7 @@ export default abstract class ModelWrapper<T extends Model> {
   _original: T
   _db: SQLSource
   abstract _before: Partial<ThisType<T>>
-  isDatabase: true = true
+  isDatabase = true as const
 
   constructor (stat: T, db: SQLSource) {
     this._original = stat

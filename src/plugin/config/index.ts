@@ -9,7 +9,7 @@ export interface AppOptions {
   version: number,
   check?: SearchParams
 }
-const a:Plugin = function Config (app, options: AppOptions) {
+const a: Plugin = function Config (app, options: AppOptions) {
   if (options.version) app._version = options.version
   if (!options.check) {
     options.check = {

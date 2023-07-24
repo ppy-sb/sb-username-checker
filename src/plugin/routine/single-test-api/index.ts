@@ -17,8 +17,7 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}
       name,
       rejected: false,
       checkResult: [],
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      approve () {},
+      approve () { },
       reject (reason) {
         fakeUser.rejected = true
         this.checkResult.push(reason)
@@ -27,11 +26,12 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}
     await ctx.check(fakeUser)
     return {
       ...fakeUser,
+      checkResult: fakeUser.checkResult.map(res => ({ ...res, markedBy: { name: res.markedBy.name } })),
       isDatabase: undefined
     }
   }
 
-  ctx.useApplication(function TestAPI (ctx: USBC) {
+  ctx.useApplication(function TestAPI () {
     server.listen(options.port || 4532, options.host)
     server.get<{
       Querystring: {

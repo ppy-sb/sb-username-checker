@@ -1,10 +1,10 @@
 import { App } from 'app'
 import v1Checker from 'checker/forbidden-words'
-// import LogModifiy from 'plugin/routine/batch-check/log'
 import config from 'plugin/config'
 import updateVersion from 'plugin/update-checker-version'
 import rename from 'plugin/rename'
 import BanRejectedUserPlugin from 'plugin/ban'
+import createWhitelist from '../plugin/checker/whitelist'
 
 export default async function createApp () {
   const app = new App()
@@ -30,9 +30,19 @@ export default async function createApp () {
         url: 'https://raw.githubusercontent.com/ppy-sb/sensitive-words/master/色情类.txt',
         method: 'get'
       },
-      splitter: ',\n'
+      separator: ',\n'
     }
   })
+  await app.use(v1Checker, {
+    strategy: 'remote',
+    strategyOptions: {
+      fetch: {
+        url: 'https://raw.githubusercontent.com/cjh0613/tencent-sensitive-words/main/sensitive_words_lines.txt',
+        method: 'get'
+      }
+    }
+  })
+  await app.use(createWhitelist, ['日'])
   await app.use(BanRejectedUserPlugin)
   await app.use(rename, {
     replaceWith: '*',
