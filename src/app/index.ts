@@ -1,6 +1,6 @@
 import { Callback, AppCallback, Config, Plugin } from 'types/useable'
 import { Database, UserHoldingNames, DatabaseUserHoldingNames } from 'types/source'
-import { SearchParams } from '../plugin/config'
+import { SearchParams } from 'plugin/config'
 // import EventEmitter from 'events'
 
 class Base {

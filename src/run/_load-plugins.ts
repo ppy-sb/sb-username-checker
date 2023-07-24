@@ -4,7 +4,7 @@ import config from 'plugin/config'
 import updateVersion from 'plugin/update-checker-version'
 import rename from 'plugin/rename'
 import BanRejectedUserPlugin from 'plugin/ban'
-import createWhitelist from '../plugin/checker/whitelist'
+import LocalWhitelist from 'plugin/checker/whitelist/local'
 
 export default async function createApp () {
   const app = new App()
@@ -42,7 +42,7 @@ export default async function createApp () {
       }
     }
   })
-  await app.use(createWhitelist, ['日'])
+  await app.use(LocalWhitelist, { file: 'assets/whitelisted.txt' })
   await app.use(BanRejectedUserPlugin)
   await app.use(rename, {
     replaceWith: '*',

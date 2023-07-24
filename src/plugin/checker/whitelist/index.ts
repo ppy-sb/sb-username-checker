@@ -6,7 +6,7 @@ export default function createWhitelist (ctx: USBC, options: string[]) {
       return
     }
     user.checkResult = user.checkResult.filter(rej =>
-      !options.includes(rej.positive)
+      options.every(opt => !opt.includes(rej.positive))
     )
     if (!user.checkResult.length) {
       user.rejected = false
