@@ -62,7 +62,7 @@ const start = '┏ '
 const indent = '┃   '
 const end = '┗   '
 
-function createMessage (fakeUser: UserHoldingNames, { index, length, message, markedBy }: CheckResult) {
+function createMessage (fakeUser: UserHoldingNames, { index, length, message, tag }: CheckResult) {
   const name = fakeUser.name
 
   let before = name.slice(0, index)
@@ -77,7 +77,7 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ma
   }
 
   return [
-    start + chalk.underline(markedBy.tag + ':'),
+    start + chalk.underline(tag + ':'),
     indent + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
     end + handleFullWidth(before) + '^ ' + message
   ].join('\n')

@@ -42,7 +42,7 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
         length: forbiddenWord.length,
         positive: forbiddenWord,
         message: 'forbidden word: ' + forbiddenWord,
-        markedBy: { tag: tag || ForbiddenWordsChecker.name }
+        tag: tag || ForbiddenWordsChecker.name
       }))
       return true
     })
@@ -59,7 +59,7 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
           length: forbiddenWord.length,
           positive: forbiddenWord,
           message: 'forbidden word: ' + forbiddenWord,
-          markedBy: { tag: tag || ForbiddenWordsChecker.name }
+          tag: tag || ForbiddenWordsChecker.name
         }))
         return true
       })
@@ -70,21 +70,6 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
     }
     if (!nameViolation.includes(true)) {
       check.approve()
-    }
-  })
-
-  ctx.useModifier(function RemoveDuplicate (check) {
-    const old = check.checkResult
-    check.checkResult = []
-    let head: CheckResult | undefined
-    // eslint-disable-next-line no-cond-assign
-    while (head = old.pop()) {
-      if (!head) {
-        return
-      }
-      if (!old.find(res => res.field === head?.field && res.positive === head.positive && res.index === head.index)) {
-        check.checkResult.push(head)
-      }
     }
   })
 }

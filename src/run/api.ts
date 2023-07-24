@@ -1,4 +1,4 @@
-import createApp from './_load-plugins'
+import createApp from './presets/load'
 import Api from 'plugin/routine/single-test-api'
 
 (async () => {

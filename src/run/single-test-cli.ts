@@ -1,4 +1,4 @@
-import createApp from './_load-plugins'
+import createApp from './presets/load'
 import CliSingleTest from 'plugin/routine/single-test-cli'
 
 (async () => {

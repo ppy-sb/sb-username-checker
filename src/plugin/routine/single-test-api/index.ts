@@ -8,9 +8,30 @@ export interface APIOptions {
   prefix?: string
 }
 export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}) {
-  const server = fastify(options.fastify)
+  ctx.useApplication(async function TestAPI () {
+    const server = fastify(options.fastify)
+    server.get<{
+      Querystring: {
+        name: string
+      },
+      Params: {
+        name: string
+      },
+    }>(options.prefix || '/test', handler)
 
-  const handler = async (req: { query: { name: string }; params: { name: string } }) => {
+    server.get<{
+      Querystring: {
+        name: string
+      },
+      Params: {
+        name: string
+      },
+    }>(options.prefix || '/test' + '/:name', handler)
+
+    console.log('server started at ' + await server.listen(options.port || 4532, options.host))
+  })
+
+  async function handler (req: { query: { name: string }; params: { name: string } }) {
     const name = req.query.name || req.params.name
     const fakeUser: UserHoldingNames = {
       isDatabase: false,
@@ -24,30 +45,11 @@ export default function cliSingleTestPlugin (ctx: USBC, options: APIOptions = {}
       }
     }
     await ctx.check(fakeUser)
+    await ctx.justify(fakeUser)
     return {
       ...fakeUser,
-      checkResult: fakeUser.checkResult.map(res => ({ ...res, markedBy: { tag: res.markedBy.tag } })),
+      checkResult: fakeUser.checkResult,
       isDatabase: undefined
     }
   }
-
-  ctx.useApplication(function TestAPI () {
-    server.listen(options.port || 4532, options.host)
-    server.get<{
-      Querystring: {
-        name: string
-      },
-      Params: {
-        name: string
-      },
-    }>(options.prefix || '/test', handler)
-    server.get<{
-      Querystring: {
-        name: string
-      },
-      Params: {
-        name: string
-      },
-    }>(options.prefix || '/test' + '/:name', handler)
-  })
 }
