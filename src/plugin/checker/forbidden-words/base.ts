@@ -1,5 +1,4 @@
 import { USBC } from 'app'
-import { CheckResult } from 'types/source'
 export interface Options {
   forbidden: string[],
   separator: string
@@ -42,7 +41,7 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
         length: forbiddenWord.length,
         positive: forbiddenWord,
         message: 'forbidden word: ' + forbiddenWord,
-        tag: tag || ForbiddenWordsChecker.name
+        tags: [tag || ForbiddenWordsChecker.name]
       }))
       return true
     })
@@ -59,7 +58,7 @@ export default function ForbiddenWordsCheckerPlugin (ctx: USBC, options: Pick<Op
           length: forbiddenWord.length,
           positive: forbiddenWord,
           message: 'forbidden word: ' + forbiddenWord,
-          tag: tag || ForbiddenWordsChecker.name
+          tags: [tag || ForbiddenWordsChecker.name]
         }))
         return true
       })

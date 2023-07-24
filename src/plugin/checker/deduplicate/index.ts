@@ -11,8 +11,16 @@ export default function Deduplicate (ctx: USBC) {
       if (!head) {
         return
       }
-      if (!old.find(res => res.field === head?.field && res.positive === head.positive && res.index === head.index)) {
+      const duplicate = old.find(res =>
+        res.field === head?.field &&
+        res.positive === head.positive &&
+        res.index === head.index
+      )
+
+      if (!duplicate) {
         check.checkResult.push(head)
+      } else {
+        duplicate.tags = [...new Set(duplicate.tags.concat(head.tags))]
       }
     }
   })

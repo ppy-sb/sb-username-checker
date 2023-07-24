@@ -24,8 +24,9 @@ export interface CheckResult {
   length: number,
   positive: string,
   message: string,
-  tag: string
+  tags: string[]
 }
+
 export interface UserHoldingNames {
   isDatabase: false
   name: string,

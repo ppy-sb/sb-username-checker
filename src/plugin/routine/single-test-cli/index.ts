@@ -59,10 +59,11 @@ function handleFullWidth (chars: string) {
 }
 
 const start = '┏ '
+const header = '┣ '
 const indent = '┃   '
 const end = '┗   '
 
-function createMessage (fakeUser: UserHoldingNames, { index, length, message, tag }: CheckResult) {
+function createMessage (fakeUser: UserHoldingNames, { index, length, message, tags }: CheckResult) {
   const name = fakeUser.name
 
   let before = name.slice(0, index)
@@ -77,7 +78,7 @@ function createMessage (fakeUser: UserHoldingNames, { index, length, message, ta
   }
 
   return [
-    start + chalk.underline(tag + ':'),
+    ...tags.map((tag, index) => (index ? header : start) + chalk.underline(tag + ':')),
     indent + chalk.dim(before) + chalk.black.bgYellowBright(positivePart) + chalk.dim(after),
     end + handleFullWidth(before) + '^ ' + message
   ].join('\n')
