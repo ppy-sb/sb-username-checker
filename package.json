@@ -7,11 +7,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn -r dotenv/config  -r tsconfig-paths/register  src/commands/run.ts",
+    "bun:dev": "bun -r dotenv/config --watch src/commands/run.ts",
     "live": "ts-node --require dotenv/config -r tsconfig-paths/register  src/commands/run.ts",
-    "#build": "tsc -p tsconfig.json",
-    "#built": "node TS_NODE_BASEURL=./built --require dotenv/config -r tsconfig-paths/register .built/commands/run.js",
+    "bun:live": "bun -r dotenv/config src/commands/run.ts",
     "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
-    "built": "node --require dotenv/config .built/commands/run.js"
+    "built": "node -r dotenv/config .built/commands/run.js"
   },
   "workspaces": [
     "src/plugin/checker/*",
