@@ -14,7 +14,10 @@ export default async function RemoteChecker (ctx: USBC, options: Partial<PluginO
   if (!options.forbidden) options.forbidden = []
   if (options.fetch) {
     if (options.fetch.url) options.fetch.url = encodeURI(options.fetch.url)
-    const words = await getWords(options.fetch).then(words => words.split(options.separator || '\n')).then(words => words.filter(a => a))
+    const words = await getWords(options.fetch)
+      .then(words => words.split(options.separator || '\n'))
+      .then(words => words.filter(a => a))
+
     options.forbidden = options.forbidden.concat(words)
   }
   if (options.whitelisted) {
