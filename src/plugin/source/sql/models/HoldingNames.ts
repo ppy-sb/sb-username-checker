@@ -17,6 +17,9 @@ export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> im
   reject (reason: CheckResult) {
     this.rejected = true
     this.checkResult.push(reason)
+  }
+
+  seal (): void {
     this.rejectReason = this.checkResult.map(({ field, message, index, length }) => `${field}[${index}~${index + length}]: ${message}`).join(',\n')
   }
 

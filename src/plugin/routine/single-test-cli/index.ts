@@ -26,6 +26,7 @@ export default function cliSingleTestPlugin (ctx: USBC) {
         checkResult: [],
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         approve () { },
+        seal () { },
         reject (reason) {
           fakeUser.rejected = true
           this.checkResult.push(reason)

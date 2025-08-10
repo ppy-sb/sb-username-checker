@@ -28,6 +28,10 @@ class Base {
       await mod(user)
     }
   }
+
+  async seal (user: UserHoldingNames | DatabaseUserHoldingNames) {
+    user.seal()
+  }
 }
 
 export class USBC extends Base {

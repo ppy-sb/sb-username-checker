@@ -34,6 +34,7 @@ export interface UserHoldingNames {
   checkResult: CheckResult[]
   approve(): void,
   reject(reason: CheckResult): void
+  seal(): void
 }
 export interface DatabaseAddon<T> {
   isDatabase: true
