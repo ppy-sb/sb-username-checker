@@ -35,9 +35,19 @@ export class BatchChecker {
     return this._confirm()
   }
 
-  async removeInappropriateChars () {
+  async runModifiers () {
     for (const checkName of this.rejected) {
       await this._ctx.justify(checkName)
+      if (!checkName.rejected) {
+        this.approved.push(checkName)
+      }
+    }
+    this.rejected = this.rejected.filter(checkName => checkName.rejected)
+  }
+
+  async sealUsers () {
+    for (const checkName of this.rejected) {
+      await this._ctx.seal(checkName)
     }
   }
 
@@ -111,7 +121,8 @@ export default function BatchCheckerPlugin (ctx: USBC) {
   ctx.useApplication(async ctx => {
     const batchChecker = new BatchChecker(ctx)
     await batchChecker.runCheckers()
-    await batchChecker.removeInappropriateChars()
+    await batchChecker.sealUsers()
+    await batchChecker.runModifiers()
     try {
       const commit = await batchChecker.confirm()
       if (commit) {

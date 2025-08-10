@@ -1,5 +1,4 @@
 import { App } from 'app'
-import config from 'plugin/config'
 
 import LocalWhitelist from 'plugin/checker/whitelist/local'
 
@@ -38,20 +37,20 @@ export default async function createApp () {
       forbidden: words.en.concat([]),
       tag: 'npm::naughty-words::en',
       spaced: true
-    }),
+    })
 
-    app.use(RemoteChecker, {
-      fetch: {
-        url: 'https://raw.githubusercontent.com/cjh0613/tencent-sensitive-words/main/sensitive_words_lines.txt',
-        method: 'get'
-      },
-      ignoreCase: false
-    }),
-
-    app.use(LocalWhitelist, { file: 'assets/whitelisted.txt' }),
-
-    app.use(Deduplicate)
+    // app.use(RemoteChecker, {
+    //   fetch: {
+    //     url: 'https://raw.githubusercontent.com/cjh0613/tencent-sensitive-words/main/sensitive_words_lines.txt',
+    //     method: 'get'
+    //   },
+    //   ignoreCase: false
+    // }),
   ])
+
+  await app.use(Deduplicate)
+
+  await app.use(LocalWhitelist, { file: 'assets/whitelisted.txt' })
 
   return app
 }

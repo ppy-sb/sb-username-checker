@@ -2,7 +2,7 @@ import { USBC } from 'app'
 import { CheckResult } from 'types/source'
 
 export default function Deduplicate (ctx: USBC) {
-  ctx.useModifier(function RemoveDuplicate (check) {
+  ctx.useChecker(function RemoveDuplicate (check) {
     const old = check.checkResult
     check.checkResult = []
     let head: CheckResult | undefined
