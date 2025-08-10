@@ -54,8 +54,8 @@ export class BatchChecker {
   async printTable () {
     const table = this.rejected.map(checkName => ({
       id: checkName.id,
-      name: checkName.name,
-      safeName: checkName.safeName,
+      name: checkName.before.name,
+      safeName: checkName.before.safeName,
       'reject reason': checkName.rejectReason
     }))
     console.log('test positives:')
@@ -74,7 +74,7 @@ export class BatchChecker {
         acc.push(...commits.map(commit => {
           return {
             index: checkName.id,
-            name: checkName.name,
+            name: checkName.before.name,
             commit: commit.op,
             field: commit.field.join('.'),
             content: `${commit.before} -> ${commit.after}`
@@ -91,7 +91,7 @@ export class BatchChecker {
       commit.push(...commits.map(commit => {
         return {
           index: checkName.id,
-          name: checkName.name,
+          name: checkName.before.name,
           commit: commit.op,
           field: commit.field.join('.'),
           content: `${commit.before} -> ${commit.after}`

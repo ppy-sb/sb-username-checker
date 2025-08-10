@@ -2,11 +2,11 @@ import { SQLSource } from '../index'
 import { SQLUserInfo } from '../squelize-models/SQLUserInfo'
 import Base from './Base'
 export default class UserInfoWrapper extends Base<SQLUserInfo> {
-  _before
+  before
 
   constructor (doc: SQLUserInfo, db: SQLSource) {
     super(doc, db)
-    this._before = this.toJSON()
+    this.before = this.toJSON()
   }
 
   toJSON () {

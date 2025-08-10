@@ -3,13 +3,13 @@ import { SQLUserHoldingNames } from '../squelize-models/SQLUserHoldingNames'
 import { DatabaseUserHoldingNames, CheckResult } from 'types/source'
 import Wrapper from './Base'
 export default class HoldingNamesWrapper extends Wrapper<SQLUserHoldingNames> implements DatabaseUserHoldingNames {
-  _before
+  before
   rejected = false
   checkResult: CheckResult[] = []
 
   constructor (doc: SQLUserHoldingNames, db: SQLSource) {
     super(doc, db)
-    this._before = this.toJSON()
+    this.before = this.toJSON()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

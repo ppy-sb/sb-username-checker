@@ -5,7 +5,7 @@ import { SQLSource } from '../index'
 export default abstract class ModelWrapper<T extends Model> {
   _original: T
   _db: SQLSource
-  abstract _before: Partial<ThisType<T>>
+  abstract before: Partial<ThisType<T>>
   isDatabase = true as const
 
   constructor (stat: T, db: SQLSource) {
@@ -17,7 +17,7 @@ export default abstract class ModelWrapper<T extends Model> {
 
   changes () {
     const now = this.toJSON()
-    return compare(this._before, now)
+    return compare(this.before, now)
   }
 
   async save () {

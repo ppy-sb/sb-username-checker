@@ -7,21 +7,19 @@ export default function createDBApp () {
   return createApp().then(async app => {
     await Promise.all([
       app.use(config, {
-        version: 2,
+        version: 0,
         check: {
-          version: {
-            $lte: 2
-          }
         }
       }),
 
       app.use(BanRejectedUserPlugin),
 
       app.use(rename, {
-        replaceWith: '*',
+        replaceWith: '~',
         when: {
-          banned: false
-        }
+          banned: true
+        },
+        safeName: 'generate'
       }),
 
       app.use(updateVersion)

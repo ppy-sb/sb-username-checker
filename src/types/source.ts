@@ -8,8 +8,8 @@ export type DiffType = {
 export type CompareResult<T, K extends keyof T> = {
   field: string[],
   op: DiffType[keyof DiffType],
-  before?: Pick<T, K>,
-  after?: Pick<T, K>
+  before?: T[K],
+  after?: T[K]
 }
 export interface UserStat {
   id: number,
@@ -28,6 +28,10 @@ export interface CheckResult {
 }
 
 export interface UserHoldingNames {
+  before: {
+    name: string
+    safeName: string
+  }
   isDatabase: false
   name: string,
   rejected: boolean
