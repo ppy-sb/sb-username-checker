@@ -19,7 +19,9 @@ class Base {
   _installed: Map<string | symbol, Callback | AppCallback> = new Map()
 
   async check (user: UserHoldingNames | DatabaseUserHoldingNames) {
-    await Promise.all(this._checker.map(checker => checker(user)))
+    for (const checker of this._checker) {
+      await checker(user)
+    }
     return user
   }
 
