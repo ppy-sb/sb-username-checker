@@ -2,6 +2,8 @@ import { USBC } from 'app'
 import { DatabaseUserHoldingNames, DatabaseUserStat } from 'types/source'
 // @ts-expect-error no d.ts
 import Confirm from 'prompt-confirm'
+import { inspect } from 'util'
+import { table } from 'table'
 export class BatchChecker {
   _ctx: USBC
 
@@ -52,37 +54,76 @@ export class BatchChecker {
   }
 
   async printTable () {
-    const table = this.rejected.map(checkName => ({
-      id: checkName.id,
-      name: checkName.before.name,
-      safeName: checkName.before.safeName,
-      'reject reason': checkName.rejectReason
-    }))
-    console.log('test positives:')
-    console.table(table, ['id', 'name', 'safeName', 'reject reason'])
-    console.log('commits in username:')
-    console.table(
-      this.rejected.reduce((acc: Array<{
+    const positives = this.rejected.map(checkName => [
+      inspect(checkName.id, { colors: true }),
+      checkName.before.name,
+      checkName.before.safeName,
+      checkName.rejectReason
+    ])
+
+    console.log(
+      table(
+        [
+          ['id', 'name', 'safeName', 'reject reason'],
+          ...positives
+        ],
+        {
+          header: {
+            alignment: 'center',
+            content: 'Positives'
+          },
+          columns: [
+            { alignment: 'right' }
+          ]
+        }
+      )
+    )
+
+    const usernameCommits = this.rejected.reduce((acc: Array<{
         index: number,
         name: string,
         commit: string,
         field: string,
         content: string
       }>, checkName) => {
-        const commits = checkName.changes()
-        // return { checkName, commits }
-        acc.push(...commits.map(commit => {
-          return {
-            index: checkName.id,
-            name: checkName.before.name,
-            commit: commit.op,
-            field: commit.field.join('.'),
-            content: `${commit.before} -> ${commit.after}`
-          }
-        }))
-        return acc
-      }, []), ['index', 'name', 'commit', 'field', 'content']
+      const commits = checkName.changes()
+      // return { checkName, commits }
+      acc.push(...commits.map(commit => {
+        return {
+          index: checkName.id,
+          name: checkName.before.name,
+          commit: commit.op,
+          field: commit.field.join('.'),
+          content: `${inspect(commit.before, { colors: true })} -> ${inspect(commit.after, { colors: true })}`
+        }
+      }))
+      return acc
+    }, []).map(checkName => [
+      inspect(checkName.index, { colors: true }),
+      checkName.name,
+      checkName.commit,
+      checkName.field,
+      checkName.content
+    ])
+
+    console.log(
+      table(
+        [
+          ['index', 'name', 'commit', 'field', 'content'],
+          ...usernameCommits
+        ],
+        {
+          header: {
+            alignment: 'center',
+            content: 'commits in username'
+          },
+          columns: [
+            { alignment: 'right' }
+          ]
+        }
+      )
     )
+
     const commit: { index: number; name: string; commit: string; content: string, field: string }[] = []
     await Promise.all(this.rejected.map(async checkName => {
       const info = await checkName.getStat()
@@ -94,13 +135,34 @@ export class BatchChecker {
           name: checkName.before.name,
           commit: commit.op,
           field: commit.field.join('.'),
-          content: `${commit.before} -> ${commit.after}`
+          content: `${inspect(commit.before, { colors: true })} -> ${inspect(commit.after, { colors: true })}`
         }
       }))
     }))
-    console.log('commits in checkName stat:')
-    console.table(commit, ['index', 'name', 'commit', 'field', 'content'])
-    // console.log()
+
+    console.log(
+      table(
+        [
+          ['index', 'name', 'commit', 'field', 'content'],
+          ...commit.map(commit => [
+            inspect(commit.index, { colors: true }),
+            commit.name,
+            commit.commit,
+            commit.field,
+            commit.content]
+          )
+        ],
+        {
+          header: {
+            alignment: 'center',
+            content: 'commits in checkName stat'
+          },
+          columns: [
+            { alignment: 'right' }
+          ]
+        }
+      )
+    )
   }
 
   async commitToSource () {
