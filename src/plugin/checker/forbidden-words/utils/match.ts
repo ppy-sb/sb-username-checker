@@ -8,10 +8,20 @@ export function getAllIndexes (test: string, val: string, ignoreCase = true, spa
 
   if (spaced) {
     if (test === val) return [0]
-    return getAllIndexes(test, val + ' ', ignoreCase)
-      .concat(
-        getAllIndexes(test, ' ' + val, ignoreCase).map(index => index + 1)
-      )
+    let idx = 0
+    // eslint-disable-next-line no-useless-escape
+    const explode = test.split(/[- _\(\)\[\]]/).map(val => {
+      const value = [val, idx] as const
+      idx += val.length + 1
+      return value
+    })
+
+    for (const [v, i] of explode) {
+      if (v === val) {
+        indexes.push(i)
+      }
+    }
+    return indexes
   }
 
   let i = -1
