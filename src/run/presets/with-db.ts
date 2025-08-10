@@ -2,6 +2,7 @@ import createApp from './load'
 import updateVersion from 'plugin/update-checker-version'
 import rename from 'plugin/rename'
 import BanRejectedUserPlugin from 'plugin/ban'
+import config from 'plugin/config'
 export default function createDBApp () {
   return createApp().then(async app => {
     await Promise.all([
