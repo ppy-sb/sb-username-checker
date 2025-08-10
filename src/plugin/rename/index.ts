@@ -15,9 +15,9 @@ export default function RenameUserPlugin (ctx: USBC, options: Options) {
     if (checkName.isDatabase !== true) return
     const userStat = await checkName.getStat()
     if (!options.when.banned && userStat?.banned) return
-    if (options.when.oldVersion && checkName.checkerVersion >= ctx._version) return
-    if (options.when.sameVersion && checkName.checkerVersion !== ctx._version) return
-    if (options.when.lastScanNewerThan && checkName.checkDate <= options.when.lastScanNewerThan) return
+    // if (options.when.oldVersion && checkName.checkerVersion >= ctx._version) return
+    // if (options.when.sameVersion && checkName.checkerVersion !== ctx._version) return
+    // if (options.when.lastScanNewerThan && checkName.checkDate <= options.when.lastScanNewerThan) return
     checkName.checkResult.forEach((d) => {
       let name = d.field === 'name' ? checkName.name : checkName.safeName
       name = name.slice(0, d.index) + options.replaceWith.repeat(d.length) + name.slice(d.index + d.length)

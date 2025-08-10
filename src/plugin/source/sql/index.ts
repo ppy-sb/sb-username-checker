@@ -58,11 +58,52 @@ export class SQLSource implements Database {
 
   async fetchAllUserHoldingNames (find: SearchParams) {
     const where = this._modifySearchParams(find)
-    const names = await SQLUserHoldingNames.findAll({
+    const users = await SQLUserInfo.findAll({
       where
     })
-    const rtn = names.map(user => new HoldingNamesWrapper(user, this))
-    return rtn
+
+    return users.map(user => {
+      this._relational.set(`stat-${user.id}`, new UserInfoWrapper(user, this))
+      // @ts-expect-error it works
+      const wrapper = new HoldingNamesWrapper({
+        ...user,
+        _id: user.id,
+        id: user.id,
+        is_active: true,
+        name: user.name,
+        name_safe: user.safe_name,
+        inappropriate_check_date: new Date(0),
+        inappropriate_checker_version: 0,
+        create_time: 0,
+        reject_reason: '',
+        async save () {
+          user.name = this.name
+          user.safe_name = this.name_safe
+          await user.save()
+          return this
+        }
+      }, this)
+
+      return new Proxy(wrapper, {
+        set (target, key, value) {
+          if (key === 'name') {
+            user.name = value
+          }
+          if (key === 'safeName') {
+            user.safe_name = value
+          }
+          // @ts-expect-error just set
+          target[key] = value
+          return true
+        }
+      })
+    })
+    // const where = this._modifySearchParams(find)
+    // const names = await SQLUserHoldingNames.findAll({
+    //   where
+    // })
+    // const rtn = names.map(user => new HoldingNamesWrapper(user, this))
+    // return rtn
   }
 
   fetchUserHoldingNames (find: SearchParams) {
