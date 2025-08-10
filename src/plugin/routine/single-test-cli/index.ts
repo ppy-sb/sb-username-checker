@@ -20,6 +20,10 @@ export default function cliSingleTestPlugin (ctx: USBC) {
       }
 
       const fakeUser: UserHoldingNames = {
+        before: {
+          name,
+          safeName: name
+        },
         isDatabase: false,
         name,
         rejected: false,
