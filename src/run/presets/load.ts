@@ -15,10 +15,10 @@ export default async function createApp () {
     app.use(LocalChecker, {
       file: 'assets/forbidden-cn.txt'
     }),
-    app.use(LocalChecker, {
-      file: 'assets/forbidden-en.txt',
-      spaced: true
-    }),
+    // app.use(LocalChecker, {
+    //   file: 'assets/forbidden-en.txt',
+    //   spaced: true
+    // }),
 
     app.use(RemoteChecker, {
       fetch: {
